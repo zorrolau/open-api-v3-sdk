@@ -25,7 +25,7 @@ namespace OKExSDK.Models.Spot
         /// <summary>
         /// 下单类型(当前为币币交易，请求值为1)
         /// </summary>
-        public int margin_trading { get; set; }
+        public int margin_trading { get; set; } = 1;
         /// <summary>
         /// 买入或卖出的数量
         /// </summary>

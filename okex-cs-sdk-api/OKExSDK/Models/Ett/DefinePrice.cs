@@ -9,7 +9,7 @@ namespace OKExSDK.Models.Ett
         /// <summary>
         /// 该基金产品清算时间
         /// </summary>
-        public long date { get; set; }
+        public DateTime date { get; set; }
         /// <summary>
         /// 该基金产品清算时价格
         /// </summary>

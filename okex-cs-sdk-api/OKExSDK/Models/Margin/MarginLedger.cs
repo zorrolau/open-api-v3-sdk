@@ -9,7 +9,7 @@ namespace OKExSDK.Models.Margin
         /// <summary>
         /// 账单ID
         /// </summary>
-        public string ledger_id { get; set; }
+        public long ledger_id { get; set; }
         /// <summary>
         /// 币种
         /// </summary>

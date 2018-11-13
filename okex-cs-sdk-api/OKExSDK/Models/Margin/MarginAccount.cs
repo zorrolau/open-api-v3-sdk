@@ -21,11 +21,11 @@ namespace OKExSDK.Models.Margin
         /// <summary>
         /// 风险率
         /// </summary>
-        public string risk_rate { get; set; }
+        //public string risk_rate { get; set; }
         /// <summary>
         /// 爆仓价
         /// </summary>
-        public string liquidation_price { get; set; }
+        //public string liquidation_price { get; set; }
         /// <summary>
         /// 已借币 （已借未还的部分）
         /// </summary>

@@ -6,6 +6,9 @@ namespace OKExSDK.Models.Margin
 {
     public class Repayment
     {
+        /// <summary>
+        /// 借币记录ID
+        /// </summary>
         public long borrow_id { get; set; }
         /// <summary>
         /// 杠杆币对名称

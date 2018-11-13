@@ -213,6 +213,10 @@ namespace OKExSDK
                 var paramsStr = await encodedContent.ReadAsStringAsync();
                 var res = await client.GetAsync($"{url}?{paramsStr}");
                 var contentStr = await res.Content.ReadAsStringAsync();
+                if (contentStr[0] == '[')
+                {
+                    return JArray.Parse(contentStr);
+                }
                 return JObject.Parse(contentStr);
             }
         }

@@ -3,7 +3,10 @@ using Newtonsoft.Json.Linq;
 using OKExSDK;
 using OKExSDK.Models;
 using OKExSDK.Models.Account;
+using OKExSDK.Models.Ett;
 using OKExSDK.Models.Futures;
+using OKExSDK.Models.Margin;
+using OKExSDK.Models.Spot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +32,10 @@ namespace SampleCS
         private GeneralApi generalApi;
         private AccountApi accountApi;
         private FuturesApi futureApi;
+        private SpotApi spotApi;
+        private MarginApi marginApi;
+        private EttApi ettApi;
+
         private string apiKey = "";
         private string secret = "";
         private string passPhrase = "";
@@ -38,9 +45,24 @@ namespace SampleCS
             this.generalApi = new GeneralApi(this.apiKey, this.secret, this.passPhrase);
             this.futureApi = new FuturesApi(this.apiKey, this.secret, this.passPhrase);
             this.accountApi = new AccountApi(this.apiKey, this.secret, this.passPhrase);
-
-
+            this.spotApi = new SpotApi(this.apiKey, this.secret, this.passPhrase);
+            this.marginApi = new MarginApi(this.apiKey, this.secret, this.passPhrase);
+            this.ettApi = new EttApi(this.apiKey, this.secret, this.passPhrase);
             this.DataContext = new MainViewModel();
+        }
+        private void btnSetKey(object sender, RoutedEventArgs e)
+        {
+            var keyinfo = ((MainViewModel)this.DataContext).KeyInfo;
+            var apikey = keyinfo.api_key;
+            var secret = keyinfo.secret;
+            var passphrase = keyinfo.passphrase;
+            this.generalApi = new GeneralApi(apikey, secret, passphrase);
+            this.accountApi = new AccountApi(apikey, secret, passphrase);
+            this.futureApi = new FuturesApi(apikey, secret, passphrase);
+            this.spotApi = new SpotApi(apikey, secret, passphrase);
+            this.marginApi = new MarginApi(apikey, secret, passphrase);
+            this.ettApi = new EttApi(apikey, secret, passphrase);
+            MessageBox.Show("完成");
         }
 
         private async void btnSyncServerTimeClick(object sender, RoutedEventArgs e)
@@ -1026,6 +1048,1354 @@ namespace SampleCS
                 {
                     var history = resResult.ToObject<List<WithDrawalHistory>>();
                     MessageBox.Show(JsonConvert.SerializeObject(history));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetWalletLedger(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.accountApi.getLedgerAsync("eos", "2", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var walletLedger = resResult.ToObject<List<AccountLedger>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(walletLedger));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetDepositAddress(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.accountApi.getDepositAddressAsync("eos");
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var depositAddr = resResult.ToObject<List<DepositAddress>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(depositAddr));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetDepositHistory(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.accountApi.getDepositHistoryAsync();
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var history = resResult.ToObject<List<DepositHistory>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(history));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetDepositHistoryByCurrency(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.accountApi.getDepositHistoryByCurrencyAsync("eth");
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var history = resResult.ToObject<List<DepositHistory>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(history));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotAccount(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getSpotAccountsAsync();
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var spotaccount = resResult.ToObject<List<SpotAccount>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(spotaccount));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotAccountByCurrency(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getAccountByCurrencyAsync("eos");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var spotaccount = resResult.ToObject<SpotAccount>();
+                    MessageBox.Show(JsonConvert.SerializeObject(spotaccount));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotLedger(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getSpotLedgerByCurrencyAsync("eos", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var walletLedger = resResult.ToObject<List<SpotLedger>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(walletLedger));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeMarketOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.makeOrderAsync<SpotOrderMarket>(((MainViewModel)this.DataContext).SpotOrderMarket);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<SpotOrderResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeLimitOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.makeOrderAsync<SpotOrderLimit>(((MainViewModel)this.DataContext).SpotOrderLimit);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<SpotOrderResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private async void btnMakeMarketOrderBatch(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var order = ((MainViewModel)this.DataContext).SpotOrderMarket;
+                var resResult = await this.spotApi.makeOrderBatchAsync<SpotOrderMarket>(new List<SpotOrderMarket>() { order });
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var obj = resResult.Value<JObject>();
+                    foreach (var property in obj)
+                    {
+                        MessageBox.Show(property.Key + ":" + JsonConvert.SerializeObject(property.Value.ToObject<List<SpotOrderResult>>()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private async void btnMakeLimitOrderBatch(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var order = ((MainViewModel)this.DataContext).SpotOrderLimit;
+                var resResult = await this.spotApi.makeOrderBatchAsync<SpotOrderLimit>(new List<SpotOrderLimit>() { order });
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var obj = resResult.Value<JObject>();
+                    foreach (var property in obj)
+                    {
+                        MessageBox.Show(property.Key + ":" + JsonConvert.SerializeObject(property.Value.ToObject<List<SpotOrderResult>>()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnCancelSpotOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.cancelOrderByOrderIdAsync(this.spot_order_id.Text, this.spot_instrument_id.Text, null);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<SpotOrderResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnCancelSpotOrderBatch(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var orders = new List<CancelOrderBatch>();
+                var order = new CancelOrderBatch()
+                {
+                    instrument_id = this.spot_instrument_id.Text,
+                    order_ids = new List<long>() { long.Parse(this.spot_order_id.Text) },
+                };
+                orders.Add(order);
+                var resResult = await this.spotApi.cancelOrderBatchAsync(orders);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var obj = resResult.Value<JObject>();
+                    foreach (var property in obj)
+                    {
+                        MessageBox.Show(property.Key + ":" + JsonConvert.SerializeObject(property.Value.ToObject<List<SpotOrderResult>>()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotOrders(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getOrdersAsync("EOS-USD", "all", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var orders = resResult.ToObject<List<OrderFullInfo>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orders));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetPendingOrders(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getPendingOrdersAsync("CAI-BTC", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var orders = resResult.ToObject<List<OrderFullInfo>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orders));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotOrderById(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getOrderByIdAsync(this.spotinstrument_id.Text, this.spotorder_id.Text);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var fills = resResult.ToObject<OrderFullInfo>();
+                    MessageBox.Show(JsonConvert.SerializeObject(fills));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private async void btnGetSpotFills(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getFillsAsync(long.Parse(this.spotorder_id.Text), this.spotinstrument_id.Text, 1, null, 10);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<List<SpotFill>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotInstruments(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getInstrumentsAsync();
+
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var instruments = resResult.ToObject<List<SpotInstrument>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(instruments.Take(10)));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotBook(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getBookAsync("CAI-BTC", null, null);
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var book = resResult.ToObject<SpotBook>();
+                    MessageBox.Show(JsonConvert.SerializeObject(book));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotTicker(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getTickerAsync();
+
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var tickers = resResult.ToObject<List<SpotTicker>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(tickers.Take(10)));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotTickerByInstrument(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getTickerByInstrumentIdAsync("CAI-BTC");
+
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var ticker = resResult.ToObject<SpotTicker>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ticker));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotTrades(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getTradesAasync("CAI-BTC", 1, null, 10);
+
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var trades = resResult.ToObject<List<SpotTrade>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(trades));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSpotCandles(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.spotApi.getCandlesAsync("CAI-BTC", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow, 60);
+
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var candles = resResult.ToObject<List<SpotCandle>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(candles));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetMarginAccount(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getAccountsAsync();
+
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var accounts = resResult.Value<JArray>();
+                    foreach (var account in accounts)
+                    {
+                        var instrument = (string)account["instrument_id"];
+                        var curencies = instrument.Split('_');
+                        var currency1 = "currency:" + curencies[0];
+                        var currency2 = "currency:" + curencies[1];
+                        MessageBox.Show("instrument_id:" + instrument +
+                            " liquidation_price:" + account["liquidation_price"] +
+                            " product_id:" + account["product_id"] +
+                            " risk_rate:" + account["risk_rate"] +
+                            currency1 + JsonConvert.SerializeObject(account[currency1].ToObject<MarginAccount>()) + " " +
+                            currency2 + JsonConvert.SerializeObject(account[currency2].ToObject<MarginAccount>())
+                            );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetMarginAccountByInstrument(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getAccountsByInstrumentIdAsync("BTC_USDT");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var account = resResult.Value<JObject>();
+
+                    var currency1 = "currency:BTC";
+                    var currency2 = "currency:USDT";
+                    MessageBox.Show(
+                        currency1 + JsonConvert.SerializeObject(account[currency1].ToObject<MarginAccount>()) + " " +
+                        currency2 + JsonConvert.SerializeObject(account[currency2].ToObject<MarginAccount>())
+                        );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetMarginLedger(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getLedgerAsync("BTC_USDT", null, 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var marginLedger = resResult.ToObject<List<MarginLedger>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(marginLedger));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetAvailability(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getAvailabilityAsync();
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var availabels = resResult.Value<JArray>();
+                    foreach (var available in availabels)
+                    {
+                        var instrument = (string)available["instrument_id"];
+                        var curencies = instrument.Split('-');
+                        var currency1 = "currency:" + curencies[0];
+                        var currency2 = "currency:" + curencies[1];
+                        MessageBox.Show("instrument_id:" + instrument +
+                            currency1 + JsonConvert.SerializeObject(available[currency1].ToObject<MarginAvailable>()) + " " +
+                            currency2 + JsonConvert.SerializeObject(available[currency2].ToObject<MarginAvailable>())
+                            );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetAvailable(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getAvailabilityByInstrumentId("BTC_USDT");
+
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var availabels = resResult.Value<JArray>();
+                    foreach (var available in availabels)
+                    {
+                        var instrument = (string)available["instrument_id"];
+                        var curencies = instrument.Split('-');
+                        var currency1 = "currency:" + curencies[0];
+                        var currency2 = "currency:" + curencies[1];
+                        MessageBox.Show("instrument_id:" + instrument +
+                            currency1 + JsonConvert.SerializeObject(available[currency1].ToObject<MarginAvailable>()) + " " +
+                            currency2 + JsonConvert.SerializeObject(available[currency2].ToObject<MarginAvailable>())
+                            );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetBorrowed(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getBorrowedAsync("0", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var borrows = resResult.ToObject<List<Borrowed>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(borrows));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetBorrowByInstrument(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getBorrowedByInstrumentIdAsync("BTC_USDT", "0", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var borrows = resResult.ToObject<List<Borrowed>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(borrows));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeBorrow(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.makeBorrowAsync(this.borrow_instrument_id.Text, this.borrow_currency.Text, this.borrow_amount.Text);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var borrowResult = resResult.ToObject<BorrowResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(borrowResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeRepayment(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.makeRepaymentAsync(long.Parse(this.repay_borrow_id.Text), this.repay_instrument_id.Text, this.repay_currency.Text, this.repay_amount.Text);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var borrowResult = resResult.ToObject<RepaymentResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(borrowResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeMarginMarketOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.makeOrderAsync<MarginOrderMarket>(((MainViewModel)this.DataContext).MarginOrderMarket);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<MarginOrderResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeMarginMarketOrderBatch(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var order = ((MainViewModel)this.DataContext).MarginOrderMarket;
+                var resResult = await this.marginApi.makeOrderBatchAsync<MarginOrderMarket>(new List<MarginOrderMarket>() { order });
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var obj = resResult.Value<JObject>();
+                    foreach (var property in obj)
+                    {
+                        MessageBox.Show(property.Key + ":" + JsonConvert.SerializeObject(property.Value.ToObject<List<MarginOrderResult>>()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeMarginLimitOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.makeOrderAsync<MarginOrderLimit>(((MainViewModel)this.DataContext).MarginOrderLimit);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<MarginOrderResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeMarginLimitOrderBatch(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var order = ((MainViewModel)this.DataContext).MarginOrderLimit;
+                var resResult = await this.marginApi.makeOrderBatchAsync<MarginOrderLimit>(new List<MarginOrderLimit>() { order });
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var obj = resResult.Value<JObject>();
+                    foreach (var property in obj)
+                    {
+                        MessageBox.Show(property.Key + ":" + JsonConvert.SerializeObject(property.Value.ToObject<List<MarginOrderResult>>()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnCancelMarginOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.cancelOrderByOrderIdAsync(this.margin_order_id.Text, this.margin_instrument_id.Text, null);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<MarginOrderResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnCancelMarginOrderBatch(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var orders = new List<MarginCancelOrderBatch>();
+                var order = new MarginCancelOrderBatch()
+                {
+                    instrument_id = this.margin_instrument_id.Text,
+                    order_ids = new List<long>() { long.Parse(this.margin_order_id.Text) },
+                };
+                orders.Add(order);
+                var resResult = await this.marginApi.cancelOrderBatchAsync(orders);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var obj = resResult.Value<JObject>();
+                    foreach (var property in obj)
+                    {
+                        MessageBox.Show(property.Key + ":" + JsonConvert.SerializeObject(property.Value.ToObject<List<MarginOrderResult>>()));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetMarginOrderById(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getOrderByIdAsync(this.margininstrument_id.Text, this.marginorder_id.Text);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var fills = resResult.ToObject<MarginOrderFullInfo>();
+                    MessageBox.Show(JsonConvert.SerializeObject(fills));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetMarginFills(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getFillsAsync(long.Parse(this.marginorder_id.Text), this.margininstrument_id.Text, 1, null, 10);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<List<MarginFill>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetMarginOrders(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getOrdersAsync("EOS-USD", "all", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var orders = resResult.ToObject<List<MarginOrderFullInfo>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orders));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetMarginPendingOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.marginApi.getPendingOrdersAsync("CAI-BTC", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var orders = resResult.ToObject<List<MarginOrderFullInfo>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orders));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetEttAccount(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.ettApi.getAccountsAsync();
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var accounts = resResult.ToObject<List<EttAccount>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(accounts));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetEttAccountByCurrency(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.ettApi.getAccountByCurrencyAsync("eos");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var accounts = resResult.ToObject<EttAccount>();
+                    MessageBox.Show(JsonConvert.SerializeObject(accounts));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetEttLedger(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.ettApi.getLedgerAsync("eos", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var ettLedger = resResult.ToObject<List<EttLedger>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ettLedger));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeEttOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var order = ((MainViewModel)this.DataContext).EttOrder;
+                var resResult = await this.ettApi.makeOrderAsync(order);
+                JToken codeJToken;
+                if (resResult.TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<EttOrderResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetEttOrders(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.ettApi.getOrdersAsync("ok06ett", "1", "0", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var ettLedger = resResult.ToObject<List<OrderFullInfo>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ettLedger));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private async void btnGetEttOrderById(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.ettApi.getOrderByOrderIdAsync(this.ettOrderName.Text);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var ettLedger = resResult.ToObject<OrderFullInfo>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ettLedger));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnCancelEttOrder(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.ettApi.cancelOrderAsync(this.ettOrderName.Text);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    MessageBox.Show(JsonConvert.SerializeObject(resResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetConstituents(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.ettApi.getConstituentsAsync(this.ett.Text);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var constituents = resResult.ToObject<Constituents>();
+                    MessageBox.Show(JsonConvert.SerializeObject(constituents));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetDefinePrice(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.ettApi.getDefinePriceAsync(this.ett.Text);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var definePrice = resResult.ToObject<List<DefinePrice>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(definePrice));
                 }
             }
             catch (Exception ex)

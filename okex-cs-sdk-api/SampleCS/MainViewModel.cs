@@ -1,5 +1,8 @@
 ﻿using OKExSDK.Models.Account;
+using OKExSDK.Models.Ett;
 using OKExSDK.Models.Futures;
+using OKExSDK.Models.Margin;
+using OKExSDK.Models.Spot;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,13 +33,37 @@ namespace SampleCS
             this.destinationTypes.Add("OKEx", "3");
             this.destinationTypes.Add("数字货币地址", "4");
 
+            this.EttOrderTypes.Add("组合申购", "0");
+            this.EttOrderTypes.Add("用USDT申购", "1");
+            this.EttOrderTypes.Add("赎回USDT", "2");
+            this.EttOrderTypes.Add("立即赎回ett成分", "3");
+
         }
 
         public Dictionary<string, string> transferTypes { get; set; } = new Dictionary<string, string>();
         public Dictionary<string, string> destinationTypes { get; set; } = new Dictionary<string, string>();
         public Transfer Transfer { get; set; } = new Transfer();
         public WithDrawal WithDrawal { get; set; } = new WithDrawal();
-        public KeyInfo KeyInfo { get; set; }
+        public KeyInfo KeyInfo { get; set; } = new KeyInfo();
+        public SpotOrderMarket SpotOrderMarket { get; set; } = new SpotOrderMarket()
+        {
+            type = "market",
+        };
+        public SpotOrderLimit SpotOrderLimit { get; set; } = new SpotOrderLimit()
+        {
+            type = "limit",
+        };
+        public MarginOrderMarket MarginOrderMarket { get; set; } = new MarginOrderMarket()
+        {
+            type = "market"
+        };
+        public MarginOrderLimit MarginOrderLimit { get; set; } = new MarginOrderLimit()
+        {
+            type = "limit"
+        };
+
+        public EttOrder EttOrder { get; set; } = new EttOrder();
+        public Dictionary<string, string> EttOrderTypes { get; set; } = new Dictionary<string, string>();
         private OrderSingle orderSingle = new OrderSingle();
 
         public OrderSingle OrderSingle

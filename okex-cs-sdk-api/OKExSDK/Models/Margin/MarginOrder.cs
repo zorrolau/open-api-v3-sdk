@@ -25,7 +25,7 @@ namespace OKExSDK.Models.Margin
         /// <summary>
         /// 下单类型(当前为币币杠杆交易，请求值为2)
         /// </summary>
-        public int margin_trading { get; set; }
+        public int margin_trading { get; set; } = 2;
         /// <summary>
         /// 买入或卖出的数量
         /// </summary>

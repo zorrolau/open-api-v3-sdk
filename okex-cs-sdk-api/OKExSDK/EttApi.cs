@@ -208,6 +208,10 @@ namespace OKExSDK
             {
                 var res = await client.GetAsync(url);
                 var contentStr = await res.Content.ReadAsStringAsync();
+                if (contentStr[0] == '[')
+                {
+                    return JArray.Parse(contentStr);
+                }
                 return JObject.Parse(contentStr);
             }
         }
