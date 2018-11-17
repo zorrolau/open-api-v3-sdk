@@ -97,7 +97,7 @@ namespace OKExSDK
         {
             var url = $"{this.BASEURL}{this.ETT_SEGMENT}/orders";
             var bodyStr = JsonConvert.SerializeObject(order);
-            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, null)))
+            using (var client = new HttpClient(new HttpInterceptor(this._apiKey, this._secret, this._passPhrase, bodyStr)))
             {
                 var res = await client.PostAsync(url, new StringContent(bodyStr, Encoding.UTF8, "application/json"));
                 var contentStr = await res.Content.ReadAsStringAsync();
