@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using swap = OKExSDK.Models.Swap;
+
 namespace SampleCS
 {
     public class MainViewModel : INotifyPropertyChanged
@@ -64,6 +66,8 @@ namespace SampleCS
 
         public EttOrder EttOrder { get; set; } = new EttOrder();
         public Dictionary<string, string> EttOrderTypes { get; set; } = new Dictionary<string, string>();
+
+        public swap.OrderSingle SwapOrderSingle { get; set; } = new swap.OrderSingle();
         private OrderSingle orderSingle = new OrderSingle();
 
         public OrderSingle OrderSingle
@@ -78,6 +82,11 @@ namespace SampleCS
                 }
             }
         }
+
+        public List<swap.OrderBatchDetail> OrderDetailsSwap { get; set; } = new List<swap.OrderBatchDetail>()
+        {
+            new swap.OrderBatchDetail()
+        };
         private List<OrderBatchDetail> orderdetails = new List<OrderBatchDetail>() {
             new OrderBatchDetail()
         };
@@ -88,7 +97,7 @@ namespace SampleCS
             set { orderdetails = value; }
         }
 
-
+        public swap.OrderBatch OrderBatchSwap { get; set; } = new swap.OrderBatch();
 
         private OrderBatch orderBatch = new OrderBatch();
 

@@ -407,6 +407,116 @@
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
+            <TabItem Header="永续合约">
+                <ScrollViewer Margin="2,0,0,0">
+                    <StackPanel Orientation="Vertical">
+                        <Grid Height="126">
+                            <Button Content="单个合约的持仓信息" HorizontalAlignment="Left" Margin="17,20,0,0" VerticalAlignment="Top" Width="121" Click="btnGetPositionByInstrumentSwap"/>
+                            <Button Content="所有币种合约账户信息" HorizontalAlignment="Left" Margin="145,20,0,0" VerticalAlignment="Top" Width="136" Click="btnGetSwapAccounts"/>
+                            <Button Content="单个币种合约账户信息" HorizontalAlignment="Left" Margin="286,20,0,0" VerticalAlignment="Top" Width="136" Click="btnGetOneAccountSwap"/>
+                            <Button Content="获取某个合约的用户配置" HorizontalAlignment="Left" Margin="427,20,0,0" VerticalAlignment="Top" Width="163" Click="btnGetSwapSettings"/>
+                            <Button Content="设定某个合约币种杠杆" HorizontalAlignment="Left" Margin="595,20,0,0" VerticalAlignment="Top" Width="154" Click="btnSetInstrumentLeverage"/>
+                            <Button Content="账单流水查询" HorizontalAlignment="Left" Margin="17,49,0,0" VerticalAlignment="Top" Width="105" Click="btnGetLedgerSwap"/>
+                            <Button Content="获取所有订单列表" HorizontalAlignment="Left" Margin="133,49,0,0" VerticalAlignment="Top" Width="111" Click="btnGetOrdersSwap"/>
+                            <Button Content="获取订单信息" HorizontalAlignment="Left" Margin="249,49,0,0" VerticalAlignment="Top" Width="101" Click="btnGetOrderByIdSwap"/>
+                            <Button Content="获取成交明细" HorizontalAlignment="Left" Margin="355,49,0,0" VerticalAlignment="Top" Width="101" Click="btnGetFillsSwap"/>
+                            <Button Content="获取合约信息" HorizontalAlignment="Left" Margin="461,49,0,0" VerticalAlignment="Top" Width="101" Click="btnGetInstrumentsSwap"/>
+                            <Button Content="获取深度数据" HorizontalAlignment="Left" Margin="567,49,0,0" VerticalAlignment="Top" Width="101" Click="btnGetDepthSwap"/>
+                            <Button Content="获取全部ticker信息" HorizontalAlignment="Left" Margin="17,77,0,0" VerticalAlignment="Top" Width="111" Click="btnGetTickersSwap"/>
+                            <Button Content="获取某个ticker信息" HorizontalAlignment="Left" Margin="133,77,0,0" VerticalAlignment="Top" Width="111" Click="btnGetTickerByIdSwap"/>
+                            <Button Content="获取成交数据" HorizontalAlignment="Left" Margin="249,77,0,0" VerticalAlignment="Top" Width="111" Click="btnGetTradesSwap"/>
+                            <Button Content="获取K线数据" HorizontalAlignment="Left" Margin="365,77,0,0" VerticalAlignment="Top" Width="111" Click="btnGetKDataSwap"/>
+                            <Button Content="获取指数信息" HorizontalAlignment="Left" Margin="481,77,0,0" VerticalAlignment="Top" Width="111" Click="btnGetIndexSwap"/>
+                            <Button Content="获取法币汇率" HorizontalAlignment="Left" Margin="673,49,0,0" VerticalAlignment="Top" Width="111" Click="btnGetRateSwap" RenderTransformOrigin="4.486,-0.737"/>
+                            <Button Content="获取合约下一次结算时间" HorizontalAlignment="Left" Margin="457,101,0,0" VerticalAlignment="Top" Width="144" Click="btnGetFundingTimeSwap"/>
+                            <Button Content="获取平台总持仓量" HorizontalAlignment="Left" Margin="17,101,0,0" VerticalAlignment="Top" Width="111" Click="btnGetOpenInteestSwap"/>
+                            <Button Content="获取当前限价" HorizontalAlignment="Left" Margin="133,101,0,0" VerticalAlignment="Top" Width="87" Click="btnPriceLimitSwap"/>
+                            <Button Content="获取爆仓单" HorizontalAlignment="Left" Margin="225,101,0,0" VerticalAlignment="Top" Width="90" Click="btnLiquidationSwap"/>
+                            <Button Content="获取合约挂单冻结数量" HorizontalAlignment="Left" Margin="320,101,0,0" VerticalAlignment="Top" Width="130" Click="btnHoldsSwap" RenderTransformOrigin="0.5,0.526"/>
+                            <Button Content="获取合约标记价格" HorizontalAlignment="Left" Margin="606,101,0,0" VerticalAlignment="Top" Width="111" Click="btnGetMarkPriceSwap" RenderTransformOrigin="4.486,-0.737"/>
+                            <Button Content="获取合约历史资金费率" HorizontalAlignment="Left" Margin="597,77,0,0" VerticalAlignment="Top" Width="187" Click="btnGetHistoricalSwap" RenderTransformOrigin="4.486,-0.737"/>
+                        </Grid>
+                        <!--<GroupBox Header="设置逐仓合约杠杆倍数">
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <Label Height="26">币种：</Label>
+                                <TextBox Name="currency" Width="96" Height="26" VerticalContentAlignment="Center"></TextBox>
+                                <Label Height="26">杠杆倍数：</Label>
+                                <ComboBox Width="62" Name="leverage" Height="26">
+                                    <ComboBoxItem>10</ComboBoxItem>
+                                    <ComboBoxItem>20</ComboBoxItem>
+                                </ComboBox>
+                                <Label Height="26">合约ID：</Label>
+                                <TextBox Name="instrument_id" Width="106" Height="26"></TextBox>
+                                <Label Height="26">开仓方向：</Label>
+                                <ComboBox Width="74" Name="direction" Height="26">
+                                    <ComboBoxItem>long</ComboBoxItem>
+                                    <ComboBoxItem>short</ComboBoxItem>
+                                </ComboBox>
+                                <Button Content="设定逐仓合约币种杠杆倍数" Width="157" Click="btnSetFixedLeverage" Height="26" Margin="20,0,0,0"/>
+                            </StackPanel>
+                        </GroupBox>-->
+                        <GroupBox Header="下单">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Height="26">合约ID：</Label>
+                                    <TextBox Width="106" Height="26" Text="{Binding SwapOrderSingle.instrument_id}"></TextBox>
+                                    <Label Height="26">类型：</Label>
+                                    <ComboBox Width="62" Height="26" ItemsSource="{Binding OrderTypes}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding SwapOrderSingle.type}">
+                                    </ComboBox>
+                                    <Label Height="26">价格：</Label>
+                                    <TextBox  Width="96" Height="26" VerticalContentAlignment="Center" Text="{Binding SwapOrderSingle.price}"></TextBox>
+                                    <Label Height="26">数量：</Label>
+                                    <TextBox Width="96" Height="26" VerticalContentAlignment="Center" Text="{Binding SwapOrderSingle.size}"></TextBox>
+                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding SwapOrderSingle.match_price}">对手价</CheckBox>
+                                </StackPanel>
+                                <Button Content="下单" Width="157" Click="btnMakeOrderSwap" Height="26" HorizontalContentAlignment="Center" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="批量下单">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal" Margin="4">
+                                    <Label Height="26">合约ID：</Label>
+                                    <TextBox Width="106" Height="26" Text="{Binding OrderBatchSwap.instrument_id}"></TextBox>
+                                </StackPanel>
+                                <ListView ItemsSource="{Binding OrderDetailsSwap}" Height="36" Width="796">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" IsItemsHost="True" Height="36" />
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Width="750" Height="30">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label Height="26">类型：</Label>
+                                                    <ComboBox Width="62" Height="26" ItemsSource="{Binding DataContext.OrderTypes, RelativeSource={RelativeSource AncestorType=ListView}}" DisplayMemberPath="Key" SelectedValuePath="Value" SelectedValue="{Binding type}">
+                                                    </ComboBox>
+                                                    <Label Height="26">价格：</Label>
+                                                    <TextBox  Width="96" Height="26" VerticalContentAlignment="Center" Text="{Binding price}"></TextBox>
+                                                    <Label Height="26">数量：</Label>
+                                                    <TextBox Width="96" Height="26" VerticalContentAlignment="Center" Text="{Binding size}"></TextBox>
+                                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding match_price}">对手价</CheckBox>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <Button Content="批量下单" Width="157" Click="btnMakeOrderBatchSwap" Height="26" HorizontalContentAlignment="Center" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="撤销订单">
+                            <StackPanel Orientation="Horizontal" Margin="4">
+                                <Label Height="26">合约Id：</Label>
+                                <TextBox Name="instrument_id_cancel_swap" Width="96" Height="26" VerticalContentAlignment="Center"></TextBox>
+                                <Label Height="26">订单Id：</Label>
+                                <TextBox Name="order_id_swap" Width="96" Height="26" VerticalContentAlignment="Center"></TextBox>
+                                <Button Content="撤销订单" Width="157" Click="btnCancelOrderSwap" Height="26" Margin="20,0,0,0"/>
+                                <Button Content="批量撤销订单" Width="157" Click="btnCancelOrderBatchSwap" Height="26" Margin="20,0,0,0"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

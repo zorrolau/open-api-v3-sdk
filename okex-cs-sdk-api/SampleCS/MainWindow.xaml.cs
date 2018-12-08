@@ -21,6 +21,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using swap = OKExSDK.Models.Swap;
 
 namespace SampleCS
 {
@@ -35,6 +36,7 @@ namespace SampleCS
         private SpotApi spotApi;
         private MarginApi marginApi;
         private EttApi ettApi;
+        private SwapApi swapApi;
 
         private string apiKey = "";
         private string secret = "";
@@ -48,6 +50,7 @@ namespace SampleCS
             this.spotApi = new SpotApi(this.apiKey, this.secret, this.passPhrase);
             this.marginApi = new MarginApi(this.apiKey, this.secret, this.passPhrase);
             this.ettApi = new EttApi(this.apiKey, this.secret, this.passPhrase);
+            this.swapApi = new SwapApi(this.apiKey, this.secret, this.passPhrase);
             this.DataContext = new MainViewModel();
         }
         private void btnSetKey(object sender, RoutedEventArgs e)
@@ -62,6 +65,7 @@ namespace SampleCS
             this.spotApi = new SpotApi(apikey, secret, passphrase);
             this.marginApi = new MarginApi(apikey, secret, passphrase);
             this.ettApi = new EttApi(apikey, secret, passphrase);
+            this.swapApi = new SwapApi(apikey, secret, passphrase);
             MessageBox.Show("完成");
         }
 
@@ -2396,6 +2400,697 @@ namespace SampleCS
                 {
                     var definePrice = resResult.ToObject<List<DefinePrice>>();
                     MessageBox.Show(JsonConvert.SerializeObject(definePrice));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetPositionByInstrumentSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getPositionByInstrumentAsync("BTC-USD-SWAP");
+                JToken codeJToken;
+                if (resResult.TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var obj = resResult.ToObject<swap.PositionResult<Position>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(obj));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSwapAccounts(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getAccountsAsync();
+                JToken codeJToken;
+                if (resResult.TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    MessageBox.Show(JsonConvert.SerializeObject(resResult.ToObject<swap.AccountsResult>()));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetOneAccountSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getAccountsByInstrumentAsync("BTC-USD-SWAP");
+                JToken codeJToken;
+                if (resResult.TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    MessageBox.Show(JsonConvert.SerializeObject(resResult.ToObject<swap.AccountResult>()));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetSwapSettings(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getSettingsByInstrumentAsync("BTC-USD-SWAP");
+                JToken codeJToken;
+                if (resResult.TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    MessageBox.Show(JsonConvert.SerializeObject(resResult.ToObject<swap.Leverage>()));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnSetInstrumentLeverage(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.setLeverageByInstrumentAsync("BTC-USD-SWAP", 12, "1");
+                JToken codeJToken;
+                if (resResult.TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    MessageBox.Show(JsonConvert.SerializeObject(resResult.ToObject<swap.Leverage>()));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetLedgerSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getLedgersByInstrumentAsync("BTC-USD-SWAP", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var ledgers = resResult.ToObject<List<swap.Ledger>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ledgers));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeOrderSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var order = ((MainViewModel)this.DataContext).SwapOrderSingle;
+                var resResult = await this.swapApi.makeOrderAsync(order.instrument_id,
+                    order.type,
+                    order.price,
+                    order.size,
+                    order.client_oid,
+                    order.match_price == "True" ? "1" : "0");
+                JToken codeJToken;
+                if (resResult.TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<swap.OrderResultSingle>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnMakeOrderBatchSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var order = ((MainViewModel)this.DataContext).OrderBatchSwap;
+                var orderDetails = ((MainViewModel)this.DataContext).OrderDetailsSwap;
+                orderDetails.ForEach(od =>
+                {
+                    od.match_price = od.match_price == "True" ? "1" : "0";
+                });
+                order.order_data = JsonConvert.SerializeObject(orderDetails);
+                var resResult = await this.swapApi.makeOrdersBatchAsync(order);
+                JToken codeJToken;
+                if (resResult.TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var orderResult = resResult.ToObject<swap.OrderBatchResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(orderResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnCancelOrderSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.cancelOrderAsync(this.instrument_id_cancel_swap.Text, this.order_id_swap.Text);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var cancelResult = resResult.ToObject<swap.CancelOrderResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(cancelResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnCancelOrderBatchSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var orderIds = new List<string>();
+                orderIds.Add(this.order_id_swap.Text);
+                var resResult = await this.swapApi.cancelOrderBatchAsync(this.instrument_id_cancel_swap.Text, orderIds);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var cancelResult = resResult.ToObject<swap.CancelOrderBatchResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(cancelResult));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetOrdersSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getOrdersAsync("BTC-USD-SWAP", "2", 1, null, 10);
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var ledgers = resResult.ToObject<swap.OrderListResult>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ledgers));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetOrderByIdSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getOrderByIdAsync("BTC-USD-SWAP", "64-8-3139f4778-0");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var ledgers = resResult.ToObject<swap.Order>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ledgers));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetFillsSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getFillsAsync("BTC-USD-SWAP", "64-8-3139f4778-0", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var fills = resResult.ToObject<List<swap.Fill>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(fills));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetInstrumentsSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getInstrumentsAsync();
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var instruments = resResult.ToObject<List<swap.Instrument>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(instruments));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetDepthSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getBookAsync("BTC-USD-SWAP", 20);
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var depth = resResult.ToObject<swap.Depth>();
+                    MessageBox.Show(JsonConvert.SerializeObject(depth));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetTickersSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getTickersAsync();
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var ticker = resResult.ToObject<List<swap.Ticker>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ticker));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetTickerByIdSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getTickerByInstrumentId("BTC-USD-SWAP");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var ticker = resResult.ToObject<swap.Ticker>();
+                    MessageBox.Show(JsonConvert.SerializeObject(ticker));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetTradesSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getTradesAsync("BTC-USD-SWAP", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var trades = resResult.ToObject<List<swap.Trade>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(trades));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetKDataSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getCandlesDataAsync("BTC-USD-SWAP", DateTime.UtcNow.AddMinutes(-1), DateTime.UtcNow, 60);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var candles = resResult.ToObject<List<List<decimal>>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(candles));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetIndexSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getIndexAsync("BTC-USD-SWAP");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var index = resResult.ToObject<swap.Index>();
+                    MessageBox.Show(JsonConvert.SerializeObject(index));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetRateSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getRateAsync();
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var rate = resResult.ToObject<swap.Rate>();
+                    MessageBox.Show(JsonConvert.SerializeObject(rate));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetOpenInteestSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getOpenInterestAsync("BTC-USD-SWAP");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var openInterest = resResult.ToObject<swap.OpenInterest>();
+                    MessageBox.Show(JsonConvert.SerializeObject(openInterest));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnPriceLimitSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getPriceLimitAsync("BTC-USD-SWAP");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var priceLimit = resResult.ToObject<swap.PriceLimit>();
+                    MessageBox.Show(JsonConvert.SerializeObject(priceLimit));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnLiquidationSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getLiquidationAsync("BTC-USD-SWAP", "0", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var liquidations = resResult.ToObject<List<swap.Liquidation>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(liquidations));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnHoldsSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getHoldsAsync("BTC-USD-SWAP");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var holds = resResult.ToObject<swap.Hold>();
+                    MessageBox.Show(JsonConvert.SerializeObject(holds));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetFundingTimeSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getFundingTimeAsync("BTC-USD-SWAP");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var holds = resResult.ToObject<swap.FundingTime>();
+                    MessageBox.Show(JsonConvert.SerializeObject(holds));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetMarkPriceSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getMarkPriceAsync("BTC-USD-SWAP");
+
+                JToken codeJToken;
+                if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                {
+                    var errorInfo = resResult.ToObject<ErrorResult>();
+                    MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                }
+                else
+                {
+                    var holds = resResult.ToObject<swap.MarkPrice>();
+                    MessageBox.Show(JsonConvert.SerializeObject(holds));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnGetHistoricalSwap(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var resResult = await this.swapApi.getHistoricalFundingRateAsync("BTC-USD-SWAP", 1, null, 10);
+                if (resResult.Type == JTokenType.Object)
+                {
+                    JToken codeJToken;
+                    if (((JObject)resResult).TryGetValue("code", out codeJToken))
+                    {
+                        var errorInfo = resResult.ToObject<ErrorResult>();
+                        MessageBox.Show("错误代码：" + errorInfo.code + ",错误消息：" + errorInfo.message);
+                    }
+                }
+                else
+                {
+                    var liquidations = resResult.ToObject<List<swap.HistoricalFundingRate>>();
+                    MessageBox.Show(JsonConvert.SerializeObject(liquidations));
                 }
             }
             catch (Exception ex)

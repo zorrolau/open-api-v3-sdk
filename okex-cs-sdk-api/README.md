@@ -541,6 +541,7 @@ public async Task<JObject> cancelOrderBatchAsync(string instrument_id, List<long
 
 ```C#
 /// <param name="instrument_id">合约ID，如BTC-USD-180213</param>
+/// <param name="status">订单状态(-1.撤单成功；0:等待成交 1:部分成交 2:全部成交 6：未完成（等待成交+部分成交）7：已完成（撤单成功+全部成交）</param>
 /// <param name="from">分页游标开始</param>
 /// <param name="to">分页游标截至</param>
 /// <param name="limit">分页数据数量，默认100</param>
@@ -589,7 +590,7 @@ public async Task<JContainer> getTickersAsync()
 ##### 获取某个ticker信息
 
 ```C#
-/// <param name="instrument_id"></param>
+/// <param name="instrument_id">合约ID，如BTC-USD-180213</param>
 public async Task<JObject> getTickerByInstrumentId(string instrument_id)
 ```
 
@@ -616,7 +617,7 @@ public async Task<JContainer> getCandlesDataAsync(string instrument_id, DateTime
 ##### 获取指数信息
 
 ```C#
-/// <param name="instrument_id"></param>
+/// <param name="instrument_id">合约ID，如BTC-USD-180213</param>
 public async Task<JObject> getIndexAsync(string instrument_id)
 ```
 
@@ -707,7 +708,6 @@ public async Task<JObject> cancelOrderAsync(string order_id)
 ##### 获取订单列表
 
 ```C#
-/// </summary>
 /// <param name="ett">[必填]列出指定ett的订单</param>
 /// <param name="type">[必填]（1:申购 2:赎回）</param>
 /// <param name="status">仅列出相应状态的订单列表。(0:所有状态 1:等待成交 2:已成交 3:已撤销)
@@ -736,5 +736,232 @@ public async Task<JObject> getConstituentsAsync(string ett)
 ```C#
 /// <param name="ett">基金名称</param>
 public async Task<JContainer> getDefinePriceAsync(string ett)
+```
+
+#### f)  永续合约API
+
+##### 单个合约持仓信息
+
+``` C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getPositionByInstrumentAsync(string instrument_id)
+```
+
+##### 所有币种合约账户信息
+``` C#
+public async Task<JObject> getAccountsAsync()
+```
+
+##### 单个币种合约账户信息
+``` C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getAccountsByInstrumentAsync(string instrument_id)
+```
+
+##### 获取某个合约的用户配置
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getSettingsByInstrumentAsync(string instrument_id)
+```
+
+##### 设定某个合约的杠杆
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="leverage">新杠杆倍数，可填写1-40之间的整数</param>
+/// <param name="side">方向:1.LONG 2.SHORT 3.CROSS</param>
+public async Task<JObject> setLeverageByInstrumentAsync(string instrument_id, int leverage, string side)
+```
+
+##### 账单流水查询
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="from">分页游标开始</param>
+/// <param name="to">分页游标截至</param>
+/// <param name="limit">分页数据数量，默认100</param>
+public async Task<JContainer> getLedgersByInstrumentAsync(string instrument_id, int? from, int? to, int? limit)
+```
+
+##### 下单
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="type">1:开多2:开空3:平多4:平空</param>
+/// <param name="price">委托价格</param>
+/// <param name="size">下单数量</param>
+/// <param name="client_oid">由您设置的订单ID来识别您的订单</param>
+/// <param name="match_price">是否以对手价下单(0:不是 1:是)</param>
+public async Task<JObject> makeOrderAsync(string instrument_id, string type, decimal price, int size, string client_oid, string match_price)
+```
+
+##### 批量下单
+
+```C#
+/// <param name="order">订单信息</param>
+public async Task<JObject> makeOrdersBatchAsync(OrderBatch order)
+```
+
+##### 撤单
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="order_id">订单id</param>
+public async Task<JObject> cancelOrderAsync(string instrument_id, string order_id)
+```
+
+##### 批量撤单
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="orderIds">订单id列表</param>
+public async Task<JObject> cancelOrderBatchAsync(string instrument_id, List<string> orderIds)
+```
+
+##### 获取所有订单列表
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="status">订单状态(-2:失败 -1:撤单成功 0:等待成交 1:部分成交 2:完全成交)
+/// <param name="from">分页游标开始</param>
+/// <param name="to">分页游标截至</param>
+/// <param name="limit">分页数据数量，默认100</param>
+public async Task<JObject> getOrdersAsync(string instrument_id, string status, int? from, int? to, int? limit)
+```
+
+##### 通过订单ID获取单个订单信息
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="order_id">订单ID</param>
+public async Task<JObject> getOrderByIdAsync(string instrument_id, string order_id)
+```
+
+##### 获取成交明细
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="order_id">订单ID</param>
+/// <param name="from">分页游标开始</param>
+/// <param name="to">分页游标截至</param>
+/// <param name="limit">分页数据数量，默认100</param>
+public async Task<JContainer> getFillsAsync(string instrument_id, string order_id, int? from, int? to, int? limit)
+```
+
+##### 获取合约信息
+
+```C#
+public async Task<JContainer> getInstrumentsAsync()
+```
+
+##### 获取深度数据
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="size">返回深度数量，最大值可传200，即买卖深度共400条</param>
+public async Task<JObject> getBookAsync(string instrument_id, int? size)
+```
+
+##### 获取全部ticker信息
+
+```C#
+public async Task<JContainer> getTickersAsync()
+```
+
+##### 获取某个ticker信息
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getTickerByInstrumentId(string instrument_id)
+```
+
+##### 获取成交数据
+
+```C#
+/// <param name="instrument_id">合约ID，如BTC-USD-180213</param>
+/// <param name="from">分页游标开始</param>
+/// <param name="to">分页游标截至</param>
+/// <param name="limit">分页数据数量，默认100</param>
+public async Task<JContainer> getTradesAsync(string instrument_id, int? from, int? to, int? limit)
+```
+
+##### 获取K线数据
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="start">开始时间</param>
+/// <param name="end">结束时间</param>
+/// <param name="granularity">时间粒度，以秒为单位，必须为60的倍数</param>
+public async Task<JContainer> getCandlesDataAsync(string instrument_id, DateTime? start, DateTime? end, int? granularity)
+```
+
+##### 获取指数信息
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getIndexAsync(string instrument_id)
+```
+
+##### 获取法币汇率
+
+```C#
+public async Task<JObject> getRateAsync()
+```
+
+##### 获取平台总持仓量
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getOpenInterestAsync(string instrument_id)
+```
+
+##### 获取当前限价
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getPriceLimitAsync(string instrument_id)
+```
+
+##### 获取爆仓单
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="status">状态(0:最近7天的未成交 1:最近7天的已成交)</param>
+/// <param name="from">分页游标开始</param>
+/// <param name="to">分页游标截至</param>
+/// <param name="limit">分页数据数量，默认100</param>
+public async Task<JContainer> getLiquidationAsync(string instrument_id, string status, int? from, int? to, int? limit)
+```
+
+##### 获取合约挂单冻结数量
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getHoldsAsync(string instrument_id)
+```
+
+##### 获取合约下一次结算时间
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getFundingTimeAsync(string instrument_id)
+```
+
+##### 获取合约标记价格
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+public async Task<JObject> getMarkPriceAsync(string instrument_id)
+```
+
+##### 获取合约历史资金费率
+
+```C#
+/// <param name="instrument_id">合约名称，如BTC-USD-SWAP</param>
+/// <param name="from">分页游标开始</param>
+/// <param name="to">分页游标截至</param>
+/// <param name="limit">分页数据数量，默认100</param>
+public async Task<JContainer> getHistoricalFundingRateAsync(string instrument_id, int? from, int? to, int? limit)
 ```
 
