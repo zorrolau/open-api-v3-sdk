@@ -83,9 +83,7 @@ class FutureAPI(Client):
             params['to'] = to
         if limit:
             params['limit'] = limit
-        if instrument_id:
-            params['instrument_id'] = instrument_id
-        return self._request_with_params(GET, FUTURE_ORDERS_LIST, params)
+        return self._request_with_params(GET, FUTURE_ORDERS_LIST+'/'+str(instrument_id), params)
 
     # query order info
     def get_order_info(self, order_id, instrument_id):

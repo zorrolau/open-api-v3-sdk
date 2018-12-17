@@ -3,6 +3,7 @@ import okex.ett_api as ett
 import okex.futures_api as future
 import okex.lever_api as lever
 import okex.spot_api as spot
+import okex.swap_api as swap
 import json
 
 
@@ -96,5 +97,10 @@ if __name__ == '__main__':
     #result = ettAPI.get_ledger('usdt')
     #result = ettAPI.get_constituents('ok06ett')
     #result = ettAPI.get_define_price('ok06ett')
+
+    # swap api test
+    # swapAPI = swap.SwapAPI(api_key, seceret_key, passphrase, True)
+    # result = swapAPI.get_accounts()
+    # result = swapAPI.get_instruments()
 
     print(json.dumps(result))

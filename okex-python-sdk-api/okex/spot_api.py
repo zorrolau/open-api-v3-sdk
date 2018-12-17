@@ -60,14 +60,17 @@ class SpotAPI(Client):
         return self._request_with_params(GET, SPOT_ORDERS_LIST, params, cursor=True)
 
     # query order info
-    def get_order_info(self, oid, instrument_id):
+    def get_order_info(self, order_id, instrument_id):
         params = {'instrument_id': instrument_id}
-        return self._request_with_params(POST, SPOT_ORDER_INFO + str(oid), params)
+        return self._request_with_params(GET, SPOT_ORDER_INFO + str(order_id), params)
 
-    # query fills
-    #def get_fills(self, order_id, instrument_id, before, after, limit):
-    #    params = {'order_id': order_id, 'instrument_id': instrument_id, 'before': before, 'after': after, 'limit': limit}
-    #    return self._request_with_params(GET, SPOT_FILLS, params, cursor=True)
+    def get_orders_pending(self, froms, to, limit):
+        params = {'limit': limit}
+        if froms:
+            params['from'] = froms
+        if to:
+            params['to'] = to
+        return self._request_with_params(GET, SPOT_ORDERS_PENDING, params, cursor=True)
 
     def get_fills(self, order_id, instrument_id, froms, to, limit='100'):
         params = {'order_id': order_id, 'instrument_id': instrument_id, 'from': froms, 'to': to, 'limit': limit}

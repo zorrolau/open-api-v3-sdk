@@ -88,6 +88,14 @@ class LeverAPI(Client):
         params = {'status': status, 'from': froms, 'to': to, 'limit': limit, 'instrument_id': instrument_id}
         return self._request_with_params(GET, LEVER_ORDER_LIST, params, cursor=True)
 
+    def get_order_pending(self, froms, to, limit):
+        params = {'limit': limit}
+        if froms:
+            params['from'] = froms
+        if to:
+            params['to'] = to
+        return self._request_with_params(GET, LEVEL_ORDERS_PENDING, params, cursor=True)
+
     # query order info
     def get_order_info(self, oid):
         return self._request_without_params(GET, LEVER_ORDER_INFO + str(oid))
