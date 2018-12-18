@@ -9,7 +9,7 @@ import hmac
 import base64
 
 def get_server_time():
-    url = "http://okexbeta.bafang.com/api/general/v3/time"
+    url = "http://www.okex.com/api/general/v3/time"
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()['iso']
