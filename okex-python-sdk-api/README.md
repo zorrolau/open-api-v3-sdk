@@ -72,6 +72,11 @@ get_ledger(self, symbol)
 ```python
 take_order(self, otype, side, instrument_id, size, client_oid='', price='', funds=''):
 ```
+- 批量下单
+```python
+take_batch_ordres(self, client_oid, instrument_id, side, ctype, size, price)
+```
+
 - 撤销指定订单
 ```python
 revoke_order(self, oid, instrument_id)
@@ -83,6 +88,12 @@ revoke_orders(self, instrument_id, order_ids)
 - 获取订单列表
 ```python
 get_orders_list(self, status, instrument_id, froms, to, limit)
+```
+
+- 获取所有未成交订单
+
+```python
+get_orders_pending(self, froms, to, limit)
 ```
 
 - 获取订单信息
@@ -284,6 +295,11 @@ repayment_coin(self, borrow_id, instrument_id, currency, amount)
 ```python
 take_order(self, instrument_id, otype, side, size, client_oid='', price='', margin_trading='')
 ```
+- 批量下单
+```python
+take_batch_ordres(self, client_oid, instrument_id, side, ctype, size, price)
+```
+
 - 撤销指定订单
 ```python
 revoke_order(self, oid)
@@ -295,6 +311,11 @@ revoke_orders(self, instrument_id)
 - 获取订单列表
 ```python
 get_order_list(self, status, froms, to, limit, instrument_id)
+```
+
+- 获取所有未成交订单
+```python
+get_order_pending(self, froms, to, limit):
 ```
 
 - 获取订单信息
@@ -346,3 +367,225 @@ get_constituents(self, ett)
 ```python
 get_define_price(self, ett)
 ```
+
+## 永续合约API 
+
+* 单个合约持仓信息
+
+```
+get_specific_position(self, instrument_id)
+```
+
+* 所有币种合约账户信息
+
+```python
+get_accounts(self)
+```
+
+* 单个币种合约账户信息
+
+```python
+get_coin_account(self, instrument_id)
+```
+
+* 获取某个合约的用户配置
+
+```python
+get_settings(self, instrument_id)
+```
+
+* 设定某个合约的杠杆
+
+```python
+set_leverage(self, instrument_id, leverage, side)
+```
+
+* 账单流水查询
+
+```python
+get_ledger(self, instrument_id, froms, to, limit)
+```
+
+* 下单
+
+```python
+take_order(self, client_oid, size, type, match_price, price, instrument_id)
+```
+
+* 批量下单
+
+```python
+take_orders(self, order_data, instrument_id)
+```
+
+* 撤单
+
+```python
+revoke_order(self, order_id, instrument_id)
+```
+
+* 批量撤单
+
+```python
+revoke_orders(self, ids, instrument_id)
+```
+
+* 获取所有订单列表
+
+```python
+get_order_list(self, status, instrument_id, froms, to, limit)
+```
+
+* 获取订单信息
+
+```python
+get_order_info(self, order_id, instrument_id)
+```
+
+* 获取成交明细
+
+```python
+get_fills(self, order_id, instrument_id, froms, to, limit)
+```
+
+* 获取合约信息
+
+```python
+get_instruments(self)
+```
+
+* 获取深度数据
+
+```python
+get_depth(self, instrument_id, size)
+```
+
+* 获取全部ticker信息
+
+```python
+get_ticker(self)
+```
+
+* 获取某个ticker信息
+
+```python
+get_specific_ticker(self, instrument_id)
+```
+
+* 获取成交数据
+
+```python
+get_trades(self, instrument_id, froms, to, limit)
+```
+
+* 获取K线数据
+
+```python
+get_kline(self, instrument_id, granularity, start='', end='')
+```
+
+* 获取指数信息
+
+```python
+get_index(self, instrument_id)
+```
+
+* 获取法币汇率
+
+```python
+get_rate(self)
+```
+
+* 获取平台总持仓量
+
+```python
+get_holds(self, instrument_id)
+```
+
+* 获取当前限价
+
+```python
+get_limit(self, instrument_id)
+```
+
+* 获取爆仓单
+
+```python
+get_liquidation(self, instrument_id)
+```
+
+* 获取合约挂单冻结数量
+
+```python
+get_holds_amount(self, instrument_id)
+```
+
+* 获取合约下一次结算时间
+
+```python
+get_funding_time(self, instrument_id)
+```
+
+* 获取合约标记价格
+
+```python
+get_mark_price(self, instrument_id)
+```
+
+* 获取合约历史资金费率
+
+```python
+get_historical_funding_rate(self, instrument_id, froms, to, limit)
+```
+
+## 永续合约websocket
+
+由于使用到了websockets库，因此对python的版本有要求，Python ≥ 3.6。
+
+* 订阅频道不需要登陆
+
+```python
+def subscribe_without_login(url, channels)
+```
+
+```python
+# swap/ticker // 行情数据频道
+# swap/candle60s // 1分钟k线数据频道
+# swap/candle180s // 3分钟k线数据频道
+# swap/candle300s // 5分钟k线数据频道
+# swap/candle900s // 15分钟k线数据频道
+# swap/candle1800s // 30分钟k线数据频道
+# swap/candle3600s // 1小时k线数据频道
+# swap/candle7200s // 2小时k线数据频道
+# swap/candle14400s // 4小时k线数据频道
+# swap/candle21600 // 6小时k线数据频道
+# swap/candle43200s // 12小时k线数据频道
+# swap/candle86400s // 1day k线数据频道
+# swap/candle604800s // 1week k线数据频道
+# swap/trade // 交易信息频道
+# swap/funding_rate//资金费率频道
+# swap/price_range//限价范围频道
+# swap/depth //深度数据频道，首次200档，后续增量
+# swap/depth5 //深度数据频道，每次返回前5档
+# swap/mark_price// 标记价格频道
+```
+
+* 订阅需要登陆的频道
+
+```python
+def subscribe(url, api_key, passphrase, secret_key, channels)
+```
+
+```python
+# swap/account //用户账户信息频道
+# swap/position //用户持仓信息频道
+# swap/order //用户交易数据频道
+```
+
+* 取消订阅
+
+```python
+def unsubscribe(url, api_key, passphrase, secret_key, channels)
+```
+
+关于python永续合约websocket的使用demo见websocket_example.py。
