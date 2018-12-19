@@ -84,13 +84,13 @@ class SwapAPI(Client):
         if size:
             params={'size': size}
             return self._request_with_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/depth', params)
-        self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/depth')
+        return self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/depth')
 
     def get_ticker(self):
-        self._request_without_params(GET, SWAP_TICKETS)
+        return self._request_without_params(GET, SWAP_TICKETS)
 
     def get_specific_ticker(self, instrument_id):
-        self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/ticker')
+        return self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/ticker')
 
     def get_trades(self, instrument_id, froms='', to='', limit=''):
         params = {}
@@ -100,7 +100,7 @@ class SwapAPI(Client):
             params['to'] = to
         if limit:
             params['limit'] = limit
-        self._request_with_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/trades', params)
+        return self._request_with_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/trades', params)
 
     def get_kline(self, instrument_id, granularity, start, end):
         params = {}
@@ -110,31 +110,31 @@ class SwapAPI(Client):
             params['start'] = start
         if end:
             params['end'] = end
-        self._request_with_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/candles', params)
+        return self._request_with_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/candles', params)
 
     def get_index(self, instrument_id):
-        self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/index')
+        return self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/index')
 
     def get_rate(self):
-        self._request_without_params(GET, SWAP_RATE)
+        return self._request_without_params(GET, SWAP_RATE)
 
     def get_holds(self, instrument_id):
-        self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/open_interest')
+        return self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/open_interest')
 
     def get_limit(self, instrument_id):
-        self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/price_limit')
+        return self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/price_limit')
 
     def get_liquidation(self, instrument_id):
-        self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/liquidation')
+        return self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/liquidation')
 
     def get_holds_amount(self, instrument_id):
-        self._request_without_params(GET, SWAP_ACCOUNTS + '/' + str(instrument_id) + '/holds')
+        return self._request_without_params(GET, SWAP_ACCOUNTS + '/' + str(instrument_id) + '/holds')
 
     def get_funding_time(self, instrument_id):
-        self._request_without_params(GET, SWAP_INSTRUMENTS + '/' + str(instrument_id) + '/funding_time')
+        return self._request_without_params(GET, SWAP_INSTRUMENTS + '/' + str(instrument_id) + '/funding_time')
 
     def get_mark_price(self, instrument_id):
-        self._request_without_params(GET, SWAP_INSTRUMENTS + '/' + str(instrument_id) + '/mark_price')
+        return self._request_without_params(GET, SWAP_INSTRUMENTS + '/' + str(instrument_id) + '/mark_price')
 
     def get_historical_funding_rate(self, instrument_id, froms='', to='', limit=''):
         params = {}
@@ -144,4 +144,4 @@ class SwapAPI(Client):
             params['to'] = to
         if limit:
             params['limit'] = limit
-        self._request_with_params(GET, SWAP_INSTRUMENTS + '/' + str(instrument_id) + '/historical_funding_rate', params)
+        return self._request_with_params(GET, SWAP_INSTRUMENTS + '/' + str(instrument_id) + '/historical_funding_rate', params)
