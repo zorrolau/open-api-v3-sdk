@@ -7,6 +7,7 @@ import requests
 import dateutil.parser as dp
 import hmac
 import base64
+import zlib
 
 def get_server_time():
     url = "http://www.okex.com/api/general/v3/time"
@@ -31,6 +32,14 @@ def login_params(timestamp, api_key, passphrase, secret_key):
     login_param = {"op": "login", "args": [api_key, passphrase, timestamp, sign.decode("utf-8")]}
     login_str = json.dumps(login_param)
     return login_str
+
+def inflate(data):
+    decompress = zlib.decompressobj(
+            -zlib.MAX_WBITS  # see above
+    )
+    inflated = decompress.decompress(data)
+    inflated += decompress.flush()
+    return inflated
 
 # subscribe channel without login
 #
@@ -62,9 +71,11 @@ async def subscribe_without_login(url, channels):
 
         print("receive:")
         res = await websocket.recv()
+        res = inflate(res)
         print(f"{res}")
 
         res = await websocket.recv()
+        res = inflate(res)
         print(f"{res}")
 
 # subscribe channel need login
@@ -89,9 +100,11 @@ async def subscribe(url, api_key, passphrase, secret_key, channels):
 
         print("receive:")
         res = await websocket.recv()
+        res = inflate(res)
         print(f"{res}")
 
         res = await websocket.recv()
+        res = inflate(res)
         print(f"{res}")
 
 # unsubscribe channels
@@ -112,12 +125,13 @@ async def unsubscribe(url, api_key, passphrase, secret_key, channels):
         print(f"send: {sub_str}")
 
         res = await websocket.recv()
+        res = inflate(res)
         print(f"{res}")
 
 api_key = ''
 seceret_key = ''
 passphrase = ''
-url = 'wss://real.okex.com:10442/ws/v3?_compress=false'
+url = 'wss://real.okex.com:10442/ws/v3?_compress=true'
 # asyncio.get_event_loop().run_until_complete(login(url, api_key, passphrase, seceret_key))
 channels = ["swap/ticker:BTC-USD-SWAP"]
 # asyncio.get_event_loop().run_until_complete(subscribe(url, api_key, passphrase, seceret_key, channels))
