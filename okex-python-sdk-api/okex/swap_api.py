@@ -113,7 +113,7 @@ class SwapAPI(Client):
         self._request_with_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/candles', params)
 
     def get_index(self, instrument_id):
-        self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id))
+        self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/index')
 
     def get_rate(self):
         self._request_without_params(GET, SWAP_RATE)
