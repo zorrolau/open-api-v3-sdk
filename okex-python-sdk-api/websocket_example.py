@@ -131,7 +131,7 @@ async def unsubscribe(url, api_key, passphrase, secret_key, channels):
 api_key = ''
 seceret_key = ''
 passphrase = ''
-url = 'wss://real.okex.com:10442/ws/v3?_compress=true'
+url = 'wss://real.okex.com:10442/ws/v3'
 # asyncio.get_event_loop().run_until_complete(login(url, api_key, passphrase, seceret_key))
 channels = ["swap/ticker:BTC-USD-SWAP"]
 # asyncio.get_event_loop().run_until_complete(subscribe(url, api_key, passphrase, seceret_key, channels))
