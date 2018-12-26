@@ -16,8 +16,8 @@ func GetDefaultConfig() *Config {
 	config.Endpoint = "http://192.168.80.113:9300/"
 	config.WSEndpoint = "ws://192.168.80.113:10442/"
 	config.ApiKey = "bb57a1b3-6257-47ff-b06c-faafc4d28fad"
-	config.SecretKey = "5CE31E70CD129F34B9E17C38534DDF90"
-	config.Passphrase = "123456"
+	config.SecretKey = ""
+	config.Passphrase = ""
 	config.TimeoutSecond = 45
 	config.IsPrint = true
 	config.I18n = ENGLISH
