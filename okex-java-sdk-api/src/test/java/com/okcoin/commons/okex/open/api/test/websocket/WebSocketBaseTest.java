@@ -16,14 +16,14 @@ public class WebSocketBaseTest {
          config.setPassphrase("123456");
          //不需要登录就能订阅的频道
          ArrayList<String> withOutLoginList = new ArrayList<>();
-         withOutLoginList.add("websocket/ticker:BTC-USD-SWAP");
-//         withOutLoginList.add("websocket/candle180s:BTC-USD-SWAP");
-//         withOutLoginList.add("websocket/mark_ticker:BTC-USD-SWAP");
+         withOutLoginList.add("perpetual/ticker:BTC-USD-SWAP");
+//         withOutLoginList.add("perpetual/candle180s:BTC-USD-SWAP");
+//         withOutLoginList.add("perpetual/mark_ticker:BTC-USD-SWAP");
          //需要登录才能订阅的频道
          ArrayList<String> loginList = new ArrayList<>();
-         loginList.add("websocket/account:BTC-USD-SWAP");
-         loginList.add("websocket/position:BTC-USD-SWAP");
-         loginList.add("websocket/order:BTC-USD-SWAP");
+         loginList.add("perpetual/account:BTC-USD-SWAP");
+         loginList.add("perpetual/position:BTC-USD-SWAP");
+         loginList.add("perpetual/order:BTC-USD-SWAP");
          config.setList(withOutLoginList);
          return config;
      }

@@ -140,6 +140,118 @@ public class WebSocketClient {
         }
     }
 
+    //是深度，需要CRC32校验
+    private static void isDepth(String str) {
+        if (str.startsWith("{\"table") && str.contains("depth")) {
+            JSON json = JSON.parseObject(str);
+            JSONArray data = ((JSONObject) json).getJSONArray("data");
+            JSONObject depthObj = (JSONObject) data.get(0);
+            Depth depth = JSONObject.parseObject(depthObj + "", Depth.class);
+            if (null != depth.getAsks() && depth.getAsks().size() > 0) {
+                List<List<Double>> asks = depth.getAsks();
+                changeMap(asks, askMap);
+            }
+            if (null != depth.getBids() && depth.getBids().size() > 0) {
+                List<List<Double>> bids = depth.getBids();
+                changeMap(bids, bidMap);
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            Set<Map.Entry<Double, Double>> aEntry = askMap.entrySet();
+            Set<Map.Entry<Double, Double>> bEntry = bidMap.entrySet();
+            Iterator<Map.Entry<Double, Double>> aiterator = aEntry.iterator();
+            Iterator<Map.Entry<Double, Double>> biterator = bEntry.iterator();
+            if (askMap.size() >= 25 && bidMap.size() >= 25) {
+                int index = 0;
+                while (aiterator.hasNext() && biterator.hasNext() && index < 25) {
+                    setString(stringBuilder,aiterator.next(),biterator.next());
+                    index++;
+                }
+            }
+            //askMap和bidMap的长度都小于25，但是askMap长度比bidMap大
+            if (askMap.size() < 25 && bidMap.size() < 25 && askMap.size() > bidMap.size()) {
+                while (aiterator.hasNext() && biterator.hasNext()) {
+                    Map.Entry<Double, Double> a_next = aiterator.next();
+                    Map.Entry<Double, Double> b_next = biterator.next();
+                    setString(stringBuilder,a_next,b_next);
+                }
+                while (aiterator.hasNext() && !biterator.hasNext()) {
+                    Map.Entry<Double, Double> a_next = aiterator.next();
+                    addString(stringBuilder,a_next);
+                }
+            }
+            //askMap和bidMap的长度都小于25，但是askMap长度比bidMap小
+            if (askMap.size() < 25 && bidMap.size() < 25 && askMap.size() < bidMap.size()) {
+                while (aiterator.hasNext() && biterator.hasNext()) {
+                    setString(stringBuilder,aiterator.next(),biterator.next());
+                }
+                while (!aiterator.hasNext() && biterator.hasNext()) {
+                    Map.Entry<Double, Double> b_next = biterator.next();
+                    addString(stringBuilder,b_next);
+                }
+            }
+            if(askMap.size()>25 && bidMap.size()<25){
+                int i = bidMap.size();
+                while (aiterator.hasNext() && biterator.hasNext()) {
+                    setString(stringBuilder,aiterator.next(),biterator.next());
+                }
+                while(aiterator.hasNext() && !biterator.hasNext() && i<25){
+                    Map.Entry<Double, Double> a_next = aiterator.next();
+                    addString(stringBuilder,a_next);
+                    i++;
+                }
+            }
+            if(askMap.size()<25 && bidMap.size()>25){
+                int j = askMap.size();
+                while (aiterator.hasNext() && biterator.hasNext()) {
+                    setString(stringBuilder,aiterator.next(),biterator.next());
+                }
+                while(!aiterator.hasNext() && biterator.hasNext() && j<25){
+                    Map.Entry<Double, Double> b_next = biterator.next();
+                    addString(stringBuilder,b_next);
+                    j++;
+                }
+            }
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            CRC32 crc32 = new CRC32();
+            crc32.update(stringBuilder.toString().getBytes());
+            System.out.println("Real checksum is:" + depth.getChecksum());
+            System.out.println("Your checksum is:" + (int)crc32.getValue());
+        }
+    }
+
+    private static void setString(StringBuilder stringBuilder,Map.Entry<Double, Double> anext,Map.Entry<Double, Double> bnext) {
+        String key1 = doubleToString(anext.getKey());
+        String value1 = doubleToString(anext.getValue());
+        String key2 = doubleToString(bnext.getKey());
+        String value2 = doubleToString(bnext.getValue());
+        stringBuilder.append(key2).append(":").append(value2).append(":");
+        stringBuilder.append(key1).append(":").append(value1).append(":");
+    }
+
+    private static void addString(StringBuilder stringBuilder,Map.Entry<Double, Double> next){
+        String key = doubleToString(next.getKey());
+        String value = doubleToString(next.getValue());
+        stringBuilder.append(key).append(":").append(value).append(":");
+    }
+
+    private static void changeMap(List<List<Double>> list, Map<Double, Double> map) {
+        for (List<Double> a : list) {
+            map.put(a.get(0), a.get(1));
+            if (a.get(1) == 0) {
+                map.remove(a.get(0));
+            }
+        }
+    }
+
+    private static String doubleToString(double number) {
+        if (number % 1 == 0) {
+            String str = number + "";
+            return str.substring(0, str.length() - 2);
+        } else {
+            return number + "";
+        }
+    }
+
     private static void isLogin(String s) {
         if (null != s && s.contains("login")) {
             if (s.endsWith("true}")) {
@@ -209,9 +321,6 @@ public class WebSocketClient {
                 }
             }
             System.out.println("Send a message to the server:" + str);
-            if (config.isPrint()) {
-                printRequest(webSocket);
-            }
             webSocket.send(str);
         } else {
             System.out.println("Please establish the connection before you operate it！");
@@ -225,55 +334,5 @@ public class WebSocketClient {
         } else {
             System.out.println("Please establish the connection before you operate it！");
         }
-    }
-
-    private static void printRequest(final WebSocket webSocket) {
-        Request request = webSocket.request();
-        final String method = request.method().toUpperCase();
-        String url = request.url().toString();
-        final RequestBody requestBody = request.body();
-        String body = "";
-        try {
-            if (requestBody != null) {
-                final Buffer buffer = new Buffer();
-                requestBody.writeTo(buffer);
-                body = buffer.readString(APIConstants.UTF_8);
-            }
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-        final StringBuilder requestInfo = new StringBuilder();
-        requestInfo.append("\n").append("\tSecret-Key: ").append(config.getSecretKey());
-        requestInfo.append("\n\tRequest(").append(DateUtils.timeToString(null, 4)).append("):");
-        requestInfo.append("\n\t\t").append("Url: ").append(url);
-        requestInfo.append("\n\t\t").append("Method: ").append(method);
-        requestInfo.append("\n\t\t").append("Headers: ");
-        final Headers headers = request.headers();
-        if (StringUtils.isNotEmpty(config.getSecretKey())) {
-            requestInfo.append("\n\t\t\t").append("Accept").append(": ").append("application/json");
-            requestInfo.append("\n\t\t\t").append("Content-Type").append(": ").append("application/json; charset=UTF-8");
-            requestInfo.append("\n\t\t\t").append("Cookie").append(": ").append(config.getI18n());
-            requestInfo.append("\n\t\t\t").append("OK-ACCESS-KEY").append(": ").append(config.getApiKey());
-            requestInfo.append("\n\t\t\t").append("OK-ACCESS-SIGN").append(": ").append(sign);
-            requestInfo.append("\n\t\t\t").append("OK-ACCESS-TIMESTAMP").append(": ").append(DateUtils.getUnixTime());
-            requestInfo.append("\n\t\t\t").append("OK-ACCESS-PASSPHRASE").append(": ").append(config.getPassphrase());
-        }
-        WebSocketClient.LOG.info(requestInfo.toString());
-    }
-
-    private static void printResponse(Response response) {
-        int status = response.code();
-        String body = response.body().toString();
-        boolean responseIsNotNull = response != null;
-        StringBuilder responseInfo = new StringBuilder();
-        responseInfo.append("\n\tResponse").append("(").append(DateUtils.timeToString(null, 4)).append("):");
-        if (responseIsNotNull) {
-            responseInfo.append("\n\t\t").append("Status: ").append(status);
-            responseInfo.append("\n\t\t").append("Message: ").append(response.message());
-            responseInfo.append("\n\t\t").append("Body: ").append(body);
-        } else {
-            responseInfo.append("\n\t\t").append("\n\tRequest Error: response is null");
-        }
-        LOG.info(responseInfo.toString());
     }
 }
