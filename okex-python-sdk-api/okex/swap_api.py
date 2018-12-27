@@ -126,7 +126,7 @@ class SwapAPI(Client):
 
     def get_liquidation(self, instrument_id, status, froms='', to='', limit=''):
         params = {'status': status}
-        if from:
+        if froms:
             params['from'] = froms
         if to:
             params['to'] = to
