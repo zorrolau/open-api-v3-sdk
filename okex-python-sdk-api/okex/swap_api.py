@@ -124,7 +124,14 @@ class SwapAPI(Client):
     def get_limit(self, instrument_id):
         return self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/price_limit')
 
-    def get_liquidation(self, instrument_id):
+    def get_liquidation(self, instrument_id, status, froms='', to='', limit=''):
+        params = {'status': status}
+        if from:
+            params['from'] = froms
+        if to:
+            params['to'] = to
+        if limit:
+            params['limit'] = limit
         return self._request_without_params(GET, SWAP_INSTRUMENTS+'/'+str(instrument_id)+'/liquidation')
 
     def get_holds_amount(self, instrument_id):
