@@ -128,6 +128,18 @@ async def unsubscribe(url, api_key, passphrase, secret_key, channels):
         res = inflate(res)
         print(f"{res}")
 
+# unsubscribe channels
+async def unsubscribe_without_login(url, channels):
+    async with websockets.connect(url) as websocket:
+        sub_param = {"op": "unsubscribe", "args": channels}
+        sub_str = json.dumps(sub_param)
+        await  websocket.send(sub_str)
+        print(f"send: {sub_str}")
+
+        res = await websocket.recv()
+        res = inflate(res)
+        print(f"{res}")
+
 api_key = ''
 seceret_key = ''
 passphrase = ''
@@ -137,3 +149,4 @@ channels = ["swap/ticker:BTC-USD-SWAP"]
 # asyncio.get_event_loop().run_until_complete(subscribe(url, api_key, passphrase, seceret_key, channels))
 # asyncio.get_event_loop().run_until_complete(unsubscribe(url, api_key, passphrase, seceret_key, channels))
 asyncio.get_event_loop().run_until_complete(subscribe_without_login(url, channels))
+asyncio.get_event_loop().run_until_complete(unsubscribe_without_login(url, channels))
