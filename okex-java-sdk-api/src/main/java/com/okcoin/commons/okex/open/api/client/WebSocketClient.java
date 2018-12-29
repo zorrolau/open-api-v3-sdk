@@ -5,14 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.okcoin.commons.okex.open.api.bean.websocket.result.Depth;
 import com.okcoin.commons.okex.open.api.config.WebSocketConfig;
-import com.okcoin.commons.okex.open.api.constant.APIConstants;
 import com.okcoin.commons.okex.open.api.enums.CharsetEnum;
 import com.okcoin.commons.okex.open.api.utils.DateUtils;
 import okhttp3.*;
-import okio.Buffer;
 import okio.ByteString;
 import org.apache.commons.compress.compressors.deflate64.Deflate64CompressorInputStream;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +69,8 @@ public class WebSocketClient {
                 .build();
 
         webSocket = client.newWebSocket(request, new WebSocketListener() {
+            ScheduledExecutorService service;
+
             @Override
             public void onOpen(final WebSocket webSocket, final Response response) {
                 //连接成功后，设置定时器，每隔25s，自动向服务器发送心跳，保持与服务器连接
@@ -81,8 +80,7 @@ public class WebSocketClient {
                         sendMessage("ping");
                     }
                 };
-                ScheduledExecutorService service = Executors
-                        .newSingleThreadScheduledExecutor();
+                service = Executors.newSingleThreadScheduledExecutor();
                 // 第二个参数为首次执行的延时时间，第三个参数为定时执行的间隔时间
                 service.scheduleAtFixedRate(runnable, 25, 25, TimeUnit.SECONDS);
                 System.out.println("Successful connection to server！");
@@ -93,6 +91,7 @@ public class WebSocketClient {
                 isLogin(s);
                 System.out.println("Received message:" + s);
                 isDepth(s);
+
             }
 
             @Override
@@ -109,8 +108,8 @@ public class WebSocketClient {
 
             @Override
             public void onFailure(final WebSocket webSocket, final Throwable t, final Response response) {
-                t.printStackTrace();
-                System.out.println("Connection failed!");
+                System.out.println("Connection failed,Please reconnect!");
+                service.shutdown();
             }
 
             @Override
@@ -163,7 +162,7 @@ public class WebSocketClient {
             if (askMap.size() >= 25 && bidMap.size() >= 25) {
                 int index = 0;
                 while (aiterator.hasNext() && biterator.hasNext() && index < 25) {
-                    setString(stringBuilder,aiterator.next(),biterator.next());
+                    setString(stringBuilder, aiterator.next(), biterator.next());
                     index++;
                 }
             }
@@ -172,42 +171,42 @@ public class WebSocketClient {
                 while (aiterator.hasNext() && biterator.hasNext()) {
                     Map.Entry<Double, Double> a_next = aiterator.next();
                     Map.Entry<Double, Double> b_next = biterator.next();
-                    setString(stringBuilder,a_next,b_next);
+                    setString(stringBuilder, a_next, b_next);
                 }
                 while (aiterator.hasNext() && !biterator.hasNext()) {
                     Map.Entry<Double, Double> a_next = aiterator.next();
-                    addString(stringBuilder,a_next);
+                    addString(stringBuilder, a_next);
                 }
             }
             //askMap和bidMap的长度都小于25，但是askMap长度比bidMap小
             if (askMap.size() < 25 && bidMap.size() < 25 && askMap.size() < bidMap.size()) {
                 while (aiterator.hasNext() && biterator.hasNext()) {
-                    setString(stringBuilder,aiterator.next(),biterator.next());
+                    setString(stringBuilder, aiterator.next(), biterator.next());
                 }
                 while (!aiterator.hasNext() && biterator.hasNext()) {
                     Map.Entry<Double, Double> b_next = biterator.next();
-                    addString(stringBuilder,b_next);
+                    addString(stringBuilder, b_next);
                 }
             }
-            if(askMap.size()>25 && bidMap.size()<25){
+            if (askMap.size() > 25 && bidMap.size() < 25) {
                 int i = bidMap.size();
                 while (aiterator.hasNext() && biterator.hasNext()) {
-                    setString(stringBuilder,aiterator.next(),biterator.next());
+                    setString(stringBuilder, aiterator.next(), biterator.next());
                 }
-                while(aiterator.hasNext() && !biterator.hasNext() && i<25){
+                while (aiterator.hasNext() && !biterator.hasNext() && i < 25) {
                     Map.Entry<Double, Double> a_next = aiterator.next();
-                    addString(stringBuilder,a_next);
+                    addString(stringBuilder, a_next);
                     i++;
                 }
             }
-            if(askMap.size()<25 && bidMap.size()>25){
+            if (askMap.size() < 25 && bidMap.size() > 25) {
                 int j = askMap.size();
                 while (aiterator.hasNext() && biterator.hasNext()) {
-                    setString(stringBuilder,aiterator.next(),biterator.next());
+                    setString(stringBuilder, aiterator.next(), biterator.next());
                 }
-                while(!aiterator.hasNext() && biterator.hasNext() && j<25){
+                while (!aiterator.hasNext() && biterator.hasNext() && j < 25) {
                     Map.Entry<Double, Double> b_next = biterator.next();
-                    addString(stringBuilder,b_next);
+                    addString(stringBuilder, b_next);
                     j++;
                 }
             }
@@ -215,11 +214,11 @@ public class WebSocketClient {
             CRC32 crc32 = new CRC32();
             crc32.update(stringBuilder.toString().getBytes());
             System.out.println("Real checksum is:" + depth.getChecksum());
-            System.out.println("Your checksum is:" + (int)crc32.getValue());
+            System.out.println("Your checksum is:" + (int) crc32.getValue());
         }
     }
 
-    private static void setString(StringBuilder stringBuilder,Map.Entry<Double, Double> anext,Map.Entry<Double, Double> bnext) {
+    private static void setString(StringBuilder stringBuilder, Map.Entry<Double, Double> anext, Map.Entry<Double, Double> bnext) {
         String key1 = doubleToString(anext.getKey());
         String value1 = doubleToString(anext.getValue());
         String key2 = doubleToString(bnext.getKey());
@@ -228,7 +227,7 @@ public class WebSocketClient {
         stringBuilder.append(key1).append(":").append(value1).append(":");
     }
 
-    private static void addString(StringBuilder stringBuilder,Map.Entry<Double, Double> next){
+    private static void addString(StringBuilder stringBuilder, Map.Entry<Double, Double> next) {
         String key = doubleToString(next.getKey());
         String value = doubleToString(next.getValue());
         stringBuilder.append(key).append(":").append(value).append(":");
@@ -297,14 +296,16 @@ public class WebSocketClient {
     public static void subscribe(List<String> list) {
         String s = listToJson(list);
         String str = "{\"op\": \"subscribe\", \"args\":" + s + "}";
-        sendMessage(str);
+        if (null != webSocket)
+            sendMessage(str);
     }
 
     //取消订阅，参数为频道组成的集合
     public static void unsubscribe(List<String> list) {
         String s = listToJson(list);
         String str = "{\"op\": \"unsubscribe\", \"args\":" + s + "}";
-        sendMessage(str);
+        if (null != webSocket)
+            sendMessage(str);
     }
 
     private static void sendMessage(String str) {
