@@ -6,6 +6,7 @@ target/
 .mvn/
 **/.DS_Store
 build/
+libs/cpprestsdk/build.debug
 ### IntelliJ IDEA ###
 .idea/
 *.iws

@@ -8,6 +8,7 @@
 #include "utils.h"
 #include <cpprest/http_client.h>
 
+using namespace std;
 using namespace web;
 
 char * GetTimestamp(char *timestamp, int len) {

@@ -8,10 +8,9 @@
 #include <ctime>
 #include <string>
 #include <map>
-using namespace std;
 
 char * GetTimestamp(char *timestamp, int len);
-string BuildParams(string requestPath, map<string,string> m);
-string JsonFormat(string jsonStr);
+std::string BuildParams(std::string requestPath, std::map<std::string,std::string> m);
+std::string JsonFormat(std::string jsonStr);
 
 #endif //CPPSDK_UTILS_H
