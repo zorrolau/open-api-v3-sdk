@@ -1,15 +1,11 @@
 #include <iostream>
+#include <cpprest/http_client.h>
 #include "okapi.h"
 #include "okapi_ws.h"
-#include <cpprest/http_client.h>
 
 string instrument_id = "BCH-USD-181228";
 string order_id = "1641326222656512";
 string currency  = "bch";
-
-using namespace web::http;
-using namespace web::http::client;
-using namespace web;
 
 int main(int argc, char *args[])
 {
@@ -23,13 +19,15 @@ int main(int argc, char *args[])
     config.IsPrint = true;
     config.Passphrase = "";
 
+
     okapi.SetConfig(config);
     /************************** test examples **********************/
-//    okapi.GetServerTime();
-//    okapi.GetCurrencies();
-//    okapi.GetWalletCurrency(currency);
-//    okapi.GetWithdrawFee();
-
+    if (0) {
+        okapi.GetServerTime();
+        okapi.GetCurrencies();
+        okapi.GetWalletCurrency(currency);
+        okapi.GetWithdrawFee();
+    }
     /************************** futures test examples **********************/
     if (0) {
         value obj;

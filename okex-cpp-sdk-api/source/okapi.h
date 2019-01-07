@@ -12,9 +12,9 @@
 #include "constants.h"
 
 using namespace std;
+using namespace web;
 using namespace web::http;
 using namespace web::http::client;
-using namespace web;
 using namespace web::json;
 
 struct Config{
