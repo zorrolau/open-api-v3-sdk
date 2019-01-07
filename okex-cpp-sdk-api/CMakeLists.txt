@@ -44,8 +44,10 @@ endif()
 # Project construction ...
 
 # source files ...
-add_executable(${PROJECT_NAME} source/main.cpp source/swap.cpp
-                               source/okapi.cpp source/okapi.h source/algo_hmac.h source/algo_hmac.cpp source/constants.h source/futures_api.cpp source/account_api.cpp source/utils.h source/utils.cpp source/spot/margin_account_api.cpp source/spot/margin_order_api.cpp source/spot/spot_account_api.cpp source/ett_api.cpp)
+add_executable(${PROJECT_NAME} source/main.cpp source/swap.cpp source/okapi_ws.h source/okapi_ws.cpp source/base64.hpp
+                               source/okapi.cpp source/okapi.h source/algo_hmac.h source/algo_hmac.cpp source/constants.h
+        source/futures_api.cpp source/account_api.cpp source/utils.h source/utils.cpp source/spot/margin_account_api.cpp
+        source/spot/margin_order_api.cpp source/spot/spot_account_api.cpp source/ett_api.cpp)
 
 # headers search paths ...
 set(CPPRESTSDK_INCLUDE_DIR "./libs/cpprestsdk/Release/include")
@@ -57,8 +59,9 @@ set(HEADER_SEARCH_PATHS ${CPPRESTSDK_INCLUDE_DIR} ${MICROSERVICE_INCLUDE_DIR} ${
 if(APPLE)
     set(OPENSSL_LIBS "/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libssl.1.0.0.dylib;/usr/local/Cellar/openssl/${OPENSSL_VERSION}/lib/libcrypto.1.0.0.dylib")
     set(CPPRESTSDK_LIBRARY "${PROJECT_SOURCE_DIR}/libs/cpprestsdk/build.debug/Binaries/libcpprest.a")
+    set(ZIP_LIBRARY "/usr/local/Cellar/zlib/1.2.11/lib/libz.dylib")
 
-    set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${Boost_LIBRARIES} ${CPPRESTSDK_LIBRARY})
+    set(LIBRARIES_SEARCH_PATHS ${OPENSSL_LIBS} ${Boost_LIBRARIES} ${CPPRESTSDK_LIBRARY} ${ZIP_LIBRARY})
 else()
     set(OPENSSL_LIBS "${OPENSSL_LIBRARIES}")
     set(CPPRESTSDK_LIBRARY "${PROJECT_SOURCE_DIR}/libs/cpprestsdk/build.debug/Binaries/libcpprest.a")
@@ -69,6 +72,7 @@ endif()
 message(BOOST_LIBS " ${Boost_LIBRARIES}")
 message(OPENSSL_LIBS " ${OPENSSL_LIBRARIES}")
 message(CPPRESTSDK_LIBRARY " ${CPPRESTSDK_LIBRARY}")
+message(ZLIB_LIBRARY " ${ZLIB_LIBRARY}")
 message(LIBRARIES_SEARCH_PATHS " ${LIBRARIES_SEARCH_PATHS}")
 
 include_directories(${HEADER_SEARCH_PATHS})
