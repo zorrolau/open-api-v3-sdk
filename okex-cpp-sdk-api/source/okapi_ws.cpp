@@ -12,25 +12,6 @@ using namespace web;
 using namespace web::websockets::client;
 using namespace concurrency::streams;       // Asynchronous streams
 
-void okapi_ws::gzTest() {
-    unsigned char *abc = (unsigned char *)"ab564a2d4bcd2b51b2524a2d2aca2f52d251ca4d2d2e4e4c4f058a386724e6e5a5e62814972716e897642667a71629a4e4a716e7a99728a4566416970055837539e7a700d51b1b189818d40200";
-    unsigned char *buf = (unsigned char *)"ab564a2d4bcd2b51b2522a2e4d2a4e2eca4c4a55d2514ace48cccb4bcd0189962716e897642667a71659398538eb8606bbe806873b0628d50200";
-    char data[4096];
-    unsigned long len;
-
-    unsigned char in[4096];
-    str_hex(buf, in);
-
-    gzDecompress((Byte *) in, strlen((char *)buf)/2, (Byte *) data, &len);
-    std::cout << "buf: " << buf << std::endl;
-    std::cout << "buflen: " << strlen((char *)buf) << std::endl;
-    std::cout << "in: " << in << std::endl;
-    std::cout << "inlen: " << strlen((char *)in) << std::endl;
-    std::cout << "data: " << data << std::endl;
-    std::cout << "len: " << len << std::endl;
-}
-
-
 // subscribe channel without login
 /*
  swap/ticker // 行情数据频道

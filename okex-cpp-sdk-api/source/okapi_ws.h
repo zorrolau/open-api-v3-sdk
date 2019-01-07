@@ -12,7 +12,6 @@
 class okapi_ws {
 private:
 public:
-    static void gzTest();
     static void Request(std::string url, std::string channels, std::string op, std::string api_key, std::string passphrase, std::string secret_key);
     static void RequestWithoutLogin(std::string url, std::string channels, std::string op);
 
