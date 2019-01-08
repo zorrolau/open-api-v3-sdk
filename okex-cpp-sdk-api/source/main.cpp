@@ -19,7 +19,6 @@ int main(int argc, char *args[])
     config.IsPrint = true;
     config.Passphrase = "";
 
-
     okapi.SetConfig(config);
     /************************** test examples **********************/
     if (0) {
@@ -68,10 +67,19 @@ int main(int argc, char *args[])
         okapi.GetFuturesProductHolds(instrument_id);
     }
 
+    /************************** websocket test examples **********************/
     string uri = U("ws://real.okex.com:10442/ws/v3");
-    okapi_ws::SubscribeWithoutLogin(uri,U("swap/ticker:BTC-USD-SWAP"));
+    pplx::create_task([=]{
+        okapi_ws::SubscribeWithoutLogin(uri,U("swap/ticker:BTC-USD-SWAP"));
+    });
+    sleep(20);
     okapi_ws::UnsubscribeWithoutLogin(uri,U("swap/ticker:BTC-USD-SWAP"));
-    okapi_ws::Subscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
+
+    sleep(20);
+    pplx::create_task([=] {
+        okapi_ws::Subscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
+    });
+    sleep(20);
     okapi_ws::Unsubscribe(uri,U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
     return 0;
 }

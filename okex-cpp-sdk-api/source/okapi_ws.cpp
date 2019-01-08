@@ -49,17 +49,17 @@ void okapi_ws::UnsubscribeWithoutLogin(std::string url, std::string channels){
 }
 
 void okapi_ws::RequestWithoutLogin(std::string url, std::string channels, std:: string op) {
+    websocket_client client;
 
     auto fileStream = std::make_shared<concurrency::streams::ostream>();
 
     // Open stream to output file.
     pplx::task<void> requestTask = fstream::open_ostream(U("results.html"))
-            .then([=](ostream outFile)
+            .then([&](ostream outFile)
                   {
                       *fileStream = outFile;
 
                       // Create http_client to send the request.
-                      websocket_client client;
                       uri wsuri(url);
                       client.connect(wsuri).wait();
                       printf("connect success: %s\n", url.c_str());
@@ -76,30 +76,39 @@ void okapi_ws::RequestWithoutLogin(std::string url, std::string channels, std:: 
                   })
 
                     // Handle response headers arriving.
-            .then([=](websocket_incoming_message msg)
+            .then([&](websocket_incoming_message msg)
                   {
-                      // Write response body into the file.
-                      unsigned char buf[4096] = {0};
-                      unsigned char data[4096] = {0};
-                      auto buflen = msg.body().streambuf().scopy(buf, 4096);
-                      auto datalen = buflen;
+                      while (op.compare("subscribe")==0) {
 
-                      if (msg.message_type() == websocket_message_type::binary_message) {
-                          gzDecompress((Byte *) buf, buflen, (Byte *) data, &datalen);
-                      } else {
-                          strcpy((char *)data, (char *)buf);
+                          // Write response body into the file.
+                          unsigned char buf[4096] = {0};
+                          unsigned char data[4096] = {0};
+
+                          auto buflen = msg.body().streambuf().scopy(buf, 4096);
+                          uLong datalen = sizeof(data);
+
+                          if (msg.message_type() == websocket_message_type::binary_message) {
+                              gzDecompress((Byte *) buf, buflen, (Byte *) data, &datalen);
+                          } else {
+                              strcpy((char *) data, (char *) buf);
+                          }
+
+                          printf("receive success: \n");
+                          printf("\t data: %s\n", data);
+                          printf("\t datalen: %ld\n\n\n", datalen);
+
+                          msg = client.receive().get();
                       }
-                      printf("receive success: \n");
-                      printf("\t data: %s\n", data);
-                      printf("\t datalen: %ld\n\n\n", datalen);
-
                       return msg.body().read_to_end(fileStream->streambuf());
+
                   })
 
 
                     // Close the file stream.
-            .then([=](size_t)
+            .then([&](size_t size)
                   {
+                      client.close();
+                      printf("client closed\n\n\n");
                       return fileStream->close();
                   });
 
@@ -113,7 +122,6 @@ void okapi_ws::RequestWithoutLogin(std::string url, std::string channels, std:: 
         printf("Error exception:%s\n", e.what());
     }
 
-//    client.close();
 }
 
 
@@ -162,7 +170,7 @@ void okapi_ws::Request(std::string url, std::string channels, std::string op, st
     auto fileStream = std::make_shared<concurrency::streams::ostream>();
 
     // Open stream to output file.
-    pplx::task<void> requestTask = fstream::open_ostream(U("results.html"))
+    pplx::task<void> requestTask = fstream::open_ostream(U("results2.html"))
             .then([&](ostream outFile)
                   {
                       *fileStream = outFile;
@@ -185,7 +193,7 @@ void okapi_ws::Request(std::string url, std::string channels, std::string op, st
                       unsigned char data[4096] = {0};
 
                       auto buflen = msg.body().streambuf().scopy(buf, 4096);
-                      auto datalen = buflen;
+                      uLong datalen = sizeof(data);
 
                       if (msg.message_type() == websocket_message_type::binary_message) {
                           gzDecompress((Byte *) buf, buflen, (Byte *) data, &datalen);
@@ -224,28 +232,32 @@ void okapi_ws::Request(std::string url, std::string channels, std::string op, st
                   })
             .then([&](websocket_incoming_message msg)
                   {
-                      // Write response body into the file.
-                      unsigned char buf[4096] = {0};
-                      unsigned char data[4096] = {0};
+                      while (op.compare("subscribe")==0) {
 
-                      auto buflen = msg.body().streambuf().scopy(buf, 4096);
-                      auto datalen = buflen;
+                          // Write response body into the file.
+                          unsigned char buf[4096] = {0};
+                          unsigned char data[4096] = {0};
 
-                      if (msg.message_type() == websocket_message_type::binary_message) {
-                          gzDecompress((Byte *) buf, buflen, (Byte *) data, &datalen);
-                      } else {
-                          strcpy((char *)data, (char *)buf);
+                          auto buflen = msg.body().streambuf().scopy(buf, 4096);
+                          uLong datalen = sizeof(data);
+
+                          if (msg.message_type() == websocket_message_type::binary_message) {
+                              gzDecompress((Byte *) buf, buflen, (Byte *) data, &datalen);
+                          } else {
+                              strcpy((char *) data, (char *) buf);
+                          }
+                          printf("receive success: \n");
+                          printf("\t data: %s\n", data);
+                          printf("\t datalen: %ld\n\n\n", datalen);
+
+                          msg = client.receive().get();
                       }
-
-                      printf("receive success: \n");
-                      printf("\t data: %s\n", data);
-                      printf("\t datalen: %ld\n\n\n", datalen);
-
                       msg.body().read_to_end(fileStream->streambuf());
-                      std::string datastr = (char *)data;
                   })
-            .then([=]()
+            .then([&]()
                   {
+                      client.close();
+                      printf("client closed\n\n\n");
                       return fileStream->close();
                   });
 
@@ -258,8 +270,6 @@ void okapi_ws::Request(std::string url, std::string channels, std::string op, st
     {
         printf("Error exception:%s\n", e.what());
     }
-
-    client.close();
 }
 
 
