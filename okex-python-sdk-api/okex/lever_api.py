@@ -69,13 +69,15 @@ class LeverAPI(Client):
         return self._request_with_params(POST, LEVER_ORDER, params)
 
     # revoke order
-    def revoke_order(self, oid, instrument_id):
+    def revoke_order(self, oid, instrument_id, client_oid):
         params = {'instrument_id': instrument_id}
+        if client_oid:
+            params['client_oid'] = client_oid
         return self._request_with_params(POST, LEVER_REVOKE_ORDER + str(oid), params)
 
     # revoke orders
-    def revoke_orders(self, instrument_id):
-        params = {'instrument_id': instrument_id}
+    def revoke_orders(self, instrument_id, order_id):
+        params = {'instrument_id': instrument_id, 'order_id': order_id}
         return self._request_with_params(POST, LEVER_REVOKE_ORDERS, params)
 
     # query order list
@@ -97,8 +99,9 @@ class LeverAPI(Client):
         return self._request_with_params(GET, LEVEL_ORDERS_PENDING, params, cursor=True)
 
     # query order info
-    def get_order_info(self, oid):
-        return self._request_without_params(GET, LEVER_ORDER_INFO + str(oid))
+    def get_order_info(self, oid, instrument_id):
+        params = {'instrument_id': instrument_id}
+        return self._request_with_params(GET, LEVER_ORDER_INFO + str(oid), instrument_id)
 
     # query fills
     def get_fills(self, order_id, instrument_id, before, after, limit):
