@@ -40,6 +40,8 @@ class SpotAPI(Client):
 
     # revoke orders
     def revoke_orders(self, instrument_id, order_ids):
+        if isinstance(order_ids, str):
+            order_ids = [order_ids]
         params = {'instrument_id': instrument_id, 'order_ids': order_ids}
         return self._request_with_params(POST, SPOT_REVOKE_ORDERS, params)
 
