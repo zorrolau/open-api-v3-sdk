@@ -66,16 +66,26 @@ class SpotAPI(Client):
         params = {'instrument_id': instrument_id}
         return self._request_with_params(GET, SPOT_ORDER_INFO + str(order_id), params)
 
-    def get_orders_pending(self, froms, to, limit):
-        params = {'limit': limit}
+    def get_orders_pending(self, froms, to, limit, instrument_id):
+        params = {}
         if froms:
             params['from'] = froms
         if to:
             params['to'] = to
+        if limit:
+            params['limit'] = limit
+        if instrument_id:
+            params['instrument_id'] = instrument_id
         return self._request_with_params(GET, SPOT_ORDERS_PENDING, params, cursor=True)
 
-    def get_fills(self, order_id, instrument_id, froms, to, limit='100'):
-        params = {'order_id': order_id, 'instrument_id': instrument_id, 'from': froms, 'to': to, 'limit': limit}
+    def get_fills(self, order_id, instrument_id, froms, to, limit):
+        params = {'order_id': order_id, 'instrument_id': instrument_id}
+        if froms:
+            params['from'] = froms
+        if to:
+            params['to'] = to
+        if limit:
+            params['limit'] = limit
         return self._request_with_params(GET, SPOT_FILLS, params, cursor=True)
 
     # query spot coin info
