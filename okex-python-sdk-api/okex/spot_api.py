@@ -116,12 +116,24 @@ class SpotAPI(Client):
     #    return self._request_with_params(GET, SPOT_DEAL + str(instrument_id) + '/trades', params)
 
     def get_deal(self, instrument_id, froms, to, limit):
-        params = {'from': froms, 'to': to, 'limit': limit}
+        params = {}
+        if froms:
+            params['from'] = froms
+        if to:
+            params['to'] = to
+        if limit:
+            params['limit'] = limit
         return self._request_with_params(GET, SPOT_DEAL + str(instrument_id) + '/trades', params)
 
     # query k-line info
     def get_kline(self, instrument_id, start, end, granularity):
-        params = {'start': start, 'end': end, 'granularity': granularity}
+        params = {}
+        if start:
+            params['start'] = start
+        if end:
+            params['end'] = end
+        if granularity:
+            params['granularity'] = granularity
         return self._request_with_params(GET, SPOT_KLINE + str(instrument_id) + '/candles', params)
 
 
