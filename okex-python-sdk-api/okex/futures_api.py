@@ -171,6 +171,3 @@ class FutureAPI(Client):
     # query holds amount
     def get_holds_amount(self, instrument_id):
         return self._request_without_params(GET, HOLD_AMOUNT+ str(instrument_id) + '/holds')
-
-    def get_currencies(self):
-        return self._request_without_params(GET, CURRENCY_LIST)

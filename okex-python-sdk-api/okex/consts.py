@@ -104,7 +104,7 @@ FUTURE_LIMIT = '/api/futures/v3/instruments/'
 FUTURE_LIQUIDATION = '/api/futures/v3/instruments/'
 FUTURE_MARK = '/api/futures/v3/instruments/'
 HOLD_AMOUNT = '/api/futures/v3/accounts/'
-CURRENCY_LIST = '/api/futures/v3/instruments/currencies/'
+#CURRENCY_LIST = '/api/futures/v3/instruments/currencies/'
 
 # ETT
 ETT_ACCOUNTS = '/api/ett/v3/accounts'
