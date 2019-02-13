@@ -108,7 +108,7 @@ class LeverAPI(Client):
     # query order info
     def get_order_info(self, oid, instrument_id):
         params = {'instrument_id': instrument_id}
-        return self._request_with_params(GET, LEVER_ORDER_INFO + str(oid), instrument_id)
+        return self._request_with_params(GET, LEVER_ORDER_INFO + str(oid), params)
 
     # query fills
     def get_fills(self, order_id, instrument_id, before, after, limit):
