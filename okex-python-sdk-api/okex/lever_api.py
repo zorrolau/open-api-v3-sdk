@@ -79,8 +79,10 @@ class LeverAPI(Client):
         return self._request_with_params(POST, LEVER_REVOKE_ORDER + str(oid), params)
 
     # revoke orders
-    def revoke_orders(self, instrument_id, order_id):
-        params = {'instrument_id': instrument_id, 'order_id': order_id}
+    def revoke_orders(self, instrument_id, order_ids):
+        if isinstance(order_ids, str):
+            order_ids = [order_ids]
+        params = {'instrument_id': instrument_id, 'order_ids': order_ids}
         return self._request_with_params(POST, LEVER_REVOKE_ORDERS, params)
 
     # query order list
