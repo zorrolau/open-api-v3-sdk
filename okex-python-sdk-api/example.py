@@ -85,7 +85,7 @@ if __name__ == '__main__':
     #levelAPI = lever.LeverAPI(api_key, seceret_key, passphrase, True)
     #result = levelAPI.get_account_info()
     #result = levelAPI.get_specific_account('btc-usdt')
-    #result = levelAPI.get_ledger_record_v3('btc-usdt', '1', '4', '2')
+    #result = levelAPI.get_ledger_record('btc-usdt', '1', '4', '2')
     #result = levelAPI.get_config_info()
     #result = levelAPI.get_specific_config_info('btc-usdt')
     #result = levelAPI.get_borrow_coin_v3(0, 1, 2, 1)
