@@ -17,13 +17,16 @@ class LeverAPI(Client):
         return self._request_without_params(GET, LEVER_COIN_ACCOUNT + str(instrument_id))
 
     # query ledger record
-    #def get_ledger_record(self, instrument_id, before, after, limit, recordtype=''):
-    #    params = {'before': before, 'after': after, 'limit': limit, 'recordType': recordtype}
-    #    return self._request_with_params(GET, LEVER_LEDGER_RECORD + str(instrument_id) + '/ledger', params, cursor=True)
-
-    # query ledger record
-    def get_ledger_record(self, instrument_id, froms, to, limit):
-        params = {'from': froms, 'to': to, 'limit': limit}
+    def get_ledger_record(self, instrument_id, froms, to, type, limit):
+        params = {}
+        if froms:
+            params['from'] = froms
+        if to:
+            params['to'] = to
+        if type:
+            params['type'] = type
+        if limit:
+            params['limit'] = limit
         return self._request_with_params(GET, LEVER_LEDGER_RECORD + str(instrument_id) + '/ledger', params, cursor=True)
 
     # query lever config info
@@ -90,12 +93,16 @@ class LeverAPI(Client):
         params = {'status': status, 'from': froms, 'to': to, 'limit': limit, 'instrument_id': instrument_id}
         return self._request_with_params(GET, LEVER_ORDER_LIST, params, cursor=True)
 
-    def get_order_pending(self, froms, to, limit):
-        params = {'limit': limit}
+    def get_order_pending(self, instrument_id, froms, to, limit):
+        params = {}
+        if instrument_id:
+            params['instrument_id'] = instrument_id
         if froms:
             params['from'] = froms
         if to:
             params['to'] = to
+        if limit:
+            params['limit'] = limit
         return self._request_with_params(GET, LEVEL_ORDERS_PENDING, params, cursor=True)
 
     # query order info
