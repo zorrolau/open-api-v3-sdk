@@ -90,13 +90,14 @@ class FutureAPI(Client):
         return self._request_without_params(GET, FUTURE_ORDER_INFO + str(instrument_id) + '/' + str(order_id))
 
     # query fills
-    #def get_fills(self, order_id, instrument_id, before, after, limit):
-    #    params = {'order_id': order_id, 'before': before, 'after': after, 'limit': limit, 'instrument_id': instrument_id}
-    #    return self._request_with_params(GET, FUTURE_FILLS, params)
-
-    # query fills
     def get_fills(self, order_id, instrument_id, froms, to, limit):
-        params = {'order_id': order_id, 'from': froms, 'to': to, 'limit': limit, 'instrument_id': instrument_id}
+        params = {'order_id': order_id, 'instrument_id': instrument_id}
+        if froms:
+            params['from'] = froms
+        if to:
+            params['to'] = to
+        if limit:
+            params['limit'] = limit
         return self._request_with_params(GET, FUTURE_FILLS, params)
 
     # get products info
