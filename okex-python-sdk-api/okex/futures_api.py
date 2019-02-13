@@ -158,7 +158,7 @@ class FutureAPI(Client):
         return self._request_without_params(GET, FUTURE_LIMIT + str(instrument_id) + '/price_limit')
 
     # query limit price
-    def get_liquidation(self, instrument_id, status, froms = 0, to = 0, limit = 0):
+    def get_liquidation(self, instrument_id, status=0, froms = 0, to = 0, limit = 0):
         params = {'instrument_id': instrument_id, 'status': status}
         if froms:
             params['from'] = froms
