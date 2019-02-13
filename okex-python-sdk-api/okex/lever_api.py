@@ -66,9 +66,21 @@ class LeverAPI(Client):
         return self._request_with_params(POST, LEVER_REPAYMENT_COIN, params)
 
     # take order
-    def take_order(self, instrument_id, otype, side, size, client_oid='', price='', margin_trading=''):
-        params = {'instrument_id': instrument_id, 'type': otype, 'side': side, 'size': size,
-                  'client_oid': client_oid, 'price': price, 'margin_trading': margin_trading}
+    def take_order(self, instrument_id, otype, side, size='', client_oid='', price='', margin_trading='', notional=''):
+        params = {'instrument_id': instrument_id, 'type': otype, 'side': side,
+                  'client_oid': client_oid}
+        if otype == 'limit':
+            params['price'] = price
+            params['size'] = size
+        elif otype == 'market':
+            if size:
+                params['size'] = size
+            if notional:
+                params['notional'] = notional
+
+        if margin_trading:
+            params['margin_trading'] = margin_trading
+
         return self._request_with_params(POST, LEVER_ORDER, params)
 
     # revoke order
