@@ -171,3 +171,7 @@ class FutureAPI(Client):
     # query holds amount
     def get_holds_amount(self, instrument_id):
         return self._request_without_params(GET, HOLD_AMOUNT+ str(instrument_id) + '/holds')
+
+    # query mark price
+    def get_mark_price(self, instrument_id):
+        return self._request_without_params(GET, FUTURE_MARK +str(instrument_id) + '/mark_price')
