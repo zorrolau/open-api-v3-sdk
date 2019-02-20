@@ -182,7 +182,7 @@ public:
     string GetTickers();
     string GetTickerByInstrumentId(string instrument_id);
     string GetTrades(string instrument_id, string from, string to, string limit);
-    string GetCandles(string instrument_id, string granularity, string start, string end);
+    string GetCandles(string instrument_id, int granularity, string start, string end);
 
     /************************** Ett API ***************************/
     string GetEttAccounts();

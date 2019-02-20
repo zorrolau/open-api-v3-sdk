@@ -39,10 +39,11 @@ string OKAPI::GetTrades(string instrument_id, string from, string to, string lim
     return Request(method, request_path);
 }
 
-string OKAPI::GetCandles(string instrument_id, string granularity, string start, string end) {
+string OKAPI::GetCandles(string instrument_id, int granularity, string start, string end) {
     string method(GET);
+    value obj;
     map<string,string> m;
-    m.insert(make_pair("granularity", granularity));
+    m.insert(make_pair("granularity", to_string(granularity)));
     m.insert(make_pair("start", start));
     m.insert(make_pair("end", end));
     string request_path = BuildParams(SpotProductPrefix+"instruments/"+instrument_id+"/candles", m);
