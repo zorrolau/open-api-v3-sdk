@@ -74,12 +74,13 @@ string OKAPI::GetSpotOrders(string instrument_id, string status, string from, st
     return Request(method, request_path);
 }
 
-string OKAPI::GetSpotOrdersPending(string from, string to, string limit) {
+string OKAPI::GetSpotOrdersPending(string from, string to, string limit, string instrument_id) {
     string method(GET);
     map<string,string> m;
     m.insert(make_pair("from", from));
     m.insert(make_pair("to", to));
     m.insert(make_pair("limit", limit));
+    m.insert(make_pair("instrument_id", instrument_id));
     string request_path = BuildParams(SpotOrderPrefix+"orders_pending", m);
     return Request(method, request_path);
 }
