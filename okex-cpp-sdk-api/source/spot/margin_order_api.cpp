@@ -17,12 +17,12 @@ string OKAPI::AddBatchOrder(value &jsonObj) {
  * @param instrument_id
  * @param order_id
  */
-string OKAPI::CancleOrdersByProductIdAndOrderId(string order_id, string instrument_id) {
-    string method(DELETE);
-    map<string,string> m;
-    m.insert(make_pair("instrument_id", instrument_id));
-    string request_path = BuildParams(MarginOrderPrefix+"cancel_orders/"+order_id, m);
-    return Request(method, request_path);
+string OKAPI::CancleOrdersByProductIdAndOrderId(string order_id, string instrument_id, string client_oid) {
+    string method(POST);
+    value obj;
+    obj[client_oid] = value::string(client_oid);
+    obj[instrument_id] = value::string(instrument_id);
+    return Request(method, MarginOrderPrefix+"cancel_orders/"+order_id, obj.serialize());
 }
 
 
