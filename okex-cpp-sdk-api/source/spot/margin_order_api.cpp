@@ -80,6 +80,7 @@ string OKAPI::GetOrders(string instrument_id, string status, string from, string
 string OKAPI::GetFills(string order_id, string instrument_id,  string from, string to, string limit) {
     string method(GET);
     map<string,string> m;
+    m.insert(make_pair("order_id", order_id));
     m.insert(make_pair("instrument_id", instrument_id));
     m.insert(make_pair("from", from));
     m.insert(make_pair("to", to));
