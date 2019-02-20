@@ -18,10 +18,10 @@ string OKAPI::AddSpotBatchOrder(value &jsonObj) {
  * @param instrument_id
  * @param order
  */
-string OKAPI::CancleSpotOrdersByProductIdAndOrderId(value &jsonObj) {
+string OKAPI::CancleSpotOrdersByProductIdAndOrderId(string order_id, value &jsonObj) {
     string method(DELETE);
     string body = jsonObj.serialize();
-    string request_path(SpotOrderPrefix+"orders/"+order_id);
+    string request_path(SpotOrderPrefix+"orders/" + order_id);
     return Request(method, request_path, body);
 }
 
