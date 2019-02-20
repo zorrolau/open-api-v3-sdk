@@ -93,9 +93,16 @@ string OKAPI::GetFuturesProductTicker(string &instrument_id) {
 /*
  Get the futures contract instrument trades
  */
-string OKAPI::GetFuturesProductTrades(string &instrument_id) {
+string OKAPI::GetFuturesProductTrades(string &instrument_id,  string from, string to, string limit) {
     string method("GET");
-    string request_path(FuturesPathPrefix+"instruments/"+instrument_id+"/trades");
+    map<string,string> m;
+    if (!from.empty())
+        m.insert(make_pair("from", from));
+    if (!to.empty())
+        m.insert(make_pair("to", to));
+    if (!limit.empty())
+        m.insert(make_pair("limit", limit));
+    string request_path = BuildParams(FuturesPathPrefix+"instruments/"+instrument_id+"/trades", m);
     string str = Request(method, request_path);
     return str;
 }

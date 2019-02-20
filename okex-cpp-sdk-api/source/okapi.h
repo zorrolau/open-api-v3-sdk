@@ -73,7 +73,7 @@ public:
     string GetFuturesProductBook(string &instrument_id, int book);
     string GetFuturesTicker();
     string GetFuturesProductTicker(string &instrument_id);
-    string GetFuturesProductTrades(string &instrument_id);
+    string GetFuturesProductTrades(string &instrument_id, string from = "", string to = "", string limit = "");
     string GetFuturesProductCandles(string instrument_id, string start="", string end="", int granularity=604800);
     string GetFuturesIndex(string instrument_id);
     string GetFuturesRate();
