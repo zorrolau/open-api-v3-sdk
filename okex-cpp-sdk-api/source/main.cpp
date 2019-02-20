@@ -2,13 +2,13 @@
 #include <cpprest/http_client.h>
 #include "okapi.h"
 #include "okapi_ws.h"
+#include <algorithm>
 
 string instrument_id = "BCH-USD-181228";
 string order_id = "1641326222656512";
 string currency  = "bch";
 
-int main(int argc, char *args[])
-{
+int main(int argc, char *args[]) {
     OKAPI okapi;
     /************************** set config **********************/
     struct Config config;
@@ -27,6 +27,26 @@ int main(int argc, char *args[])
         okapi.GetWalletCurrency(currency);
         okapi.GetWithdrawFee();
     }
+    value obj  = value::object(true);
+    obj["instrument_id"] = value::string(instrument_id);
+    obj["direction"] = value::string("long");
+
+    value obj2;
+    obj2["afds"] = value::string("sa");
+
+    value abc = value::array();
+    abc[0] = obj;
+    abc[1] = obj2;
+    cout << abc.serialize() << std::endl;
+
+    value obj3;
+    obj3["asf"] = abc;
+    cout << obj3.serialize() << std::endl;
+
+    value obj4 = value::object(true);
+    obj4["afdf"] = obj;
+    cout << obj4.serialize() << std::endl;
+
     /************************** futures test examples **********************/
     if (0) {
         value obj;
@@ -67,19 +87,22 @@ int main(int argc, char *args[])
         okapi.GetFuturesProductHolds(instrument_id);
     }
 
-    /************************** websocket test examples **********************/
-    string uri = U("ws://real.okex.com:10442/ws/v3");
-    pplx::create_task([=]{
-        okapi_ws::SubscribeWithoutLogin(uri,U("swap/ticker:BTC-USD-SWAP"));
-    });
-    sleep(20);
-    okapi_ws::UnsubscribeWithoutLogin(uri,U("swap/ticker:BTC-USD-SWAP"));
 
-    sleep(20);
-    pplx::create_task([=] {
-        okapi_ws::Subscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
-    });
-    sleep(20);
-    okapi_ws::Unsubscribe(uri,U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
+    /************************** websocket test examples **********************/
+    if (0) {
+        string uri = U("ws://real.okex.com:10442/ws/v3");
+        pplx::create_task([=] {
+            okapi_ws::SubscribeWithoutLogin(uri, U("swap/ticker:BTC-USD-SWAP"));
+        });
+        sleep(20);
+        okapi_ws::UnsubscribeWithoutLogin(uri, U("swap/ticker:BTC-USD-SWAP"));
+
+        sleep(20);
+        pplx::create_task([=] {
+            okapi_ws::Subscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
+        });
+        sleep(20);
+        okapi_ws::Unsubscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
+    }
     return 0;
 }

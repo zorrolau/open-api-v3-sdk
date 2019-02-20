@@ -177,10 +177,10 @@ public:
     string GetSpotFills(string order_id, string instrument_id, string from, string to, string limit);
 
     /************************** Spot Product API ***************************/
-    string GetProducts();
-    string GetProductsByProductId(string instrument_id, string size, string depth);
+    string GetInstruments();
+    string GetInstrumentsByProductId(string instrument_id, string size, string depth);
     string GetTickers();
-    string GetTickerByProductId(string instrument_id);
+    string GetTickerByInstrumentId(string instrument_id);
     string GetTrades(string instrument_id, string from, string to, string limit);
     string GetCandles(string instrument_id, string granularity, string start, string end);
 
