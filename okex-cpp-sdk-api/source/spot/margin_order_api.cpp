@@ -51,9 +51,15 @@ string OKAPI::GetOrders(string instrument_id, string status, string from, string
     map<string,string> m;
     m.insert(make_pair("instrument_id", instrument_id));
     m.insert(make_pair("status", status));
-    m.insert(make_pair("from", from));
-    m.insert(make_pair("to", to));
-    m.insert(make_pair("limit", limit));
+    if (!from.empty()) {
+        m.insert(make_pair("from", from));
+    }
+    if (!to.empty()) {
+        m.insert(make_pair("to", to));
+    }
+    if (limit.empty()) {
+        m.insert(make_pair("limit", limit));
+    }
     string request_path = BuildParams(MarginOrderPrefix+"orders", m);
     return Request(method, request_path);
 }
