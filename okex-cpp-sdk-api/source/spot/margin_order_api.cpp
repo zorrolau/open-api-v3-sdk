@@ -31,12 +31,9 @@ string OKAPI::CancleOrdersByProductIdAndOrderId(string order_id, string instrume
  *
  * @param instrument_id
  */
-string OKAPI::CancleOrdersByProductId(string instrument_id) {
-    string method(DELETE);
-    map<string,string> m;
-    m.insert(make_pair("instrument_id", instrument_id));
-    string request_path = BuildParams(MarginOrderPrefix+"cancel_batch_orders", m);
-    return Request(method, request_path);
+string OKAPI::CancleBatchOrders(value &jsonObj) {
+    string method(POST);
+    return Request(method, MarginOrderPrefix+"cancel_batch_orders", jsonObj.serialize());
 }
 
 /**

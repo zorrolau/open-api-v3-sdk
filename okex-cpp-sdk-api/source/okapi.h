@@ -155,7 +155,7 @@ public:
     string AddOrder(value &jsonObj);
     string AddBatchOrder(value &jsonObj);
     string CancleOrdersByProductIdAndOrderId(string order_id, string instrument_id, string client_oid = "");
-    string CancleOrdersByProductId(string instrument_id);
+    string CancleBatchOrders(value &jsonObj);
     string GetOrders(string instrument_id, string status, string from, string to, string limit);
     string GetOrderByProductIdAndOrderId(string order_id, string instrument_id);
     string GetMarginOrdersPending(string from, string to, string limit, string instrument_id);
