@@ -170,8 +170,7 @@ public:
     string AddSpotOrder(value &jsonObj);
     string AddSpotBatchOrder(value &jsonObj);
     string CancleSpotOrdersByProductIdAndOrderId(string order_id, value &jsonObj);
-    string CancleSpotOrdersByProductIdAndOrderId(value &jsonObj);
-    string CancleSpotBatchOrders(string order_ids, value &jsonObj);
+    string CancleSpotBatchOrders(value &jsonObj);
     string GetSpotOrders(string instrument_id, string status, string from, string to, string limit);
     string GetSpotOrdersPending(string from, string to, string limit, string instrument_id);
     string GetSpotOrderByProductIdAndOrderId(string order_id, string instrument_id);
