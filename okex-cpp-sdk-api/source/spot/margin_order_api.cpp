@@ -40,21 +40,6 @@ string OKAPI::CancleOrdersByProductId(string instrument_id) {
 }
 
 /**
- * get a order
- *
- * @param instrument_id
- * @param order_id
- * @return
- */
-string OKAPI::GetOrderByProductIdAndOrderId(string order_id, string instrument_id) {
-    string method(GET);
-    map<string,string> m;
-    m.insert(make_pair("instrument_id", instrument_id));
-    string request_path = BuildParams(MarginOrderPrefix+"orders/"+order_id, m);
-    return Request(method, request_path);
-}
-
-/**
  * get order list
  *
  * @param instrument_id
@@ -76,6 +61,31 @@ string OKAPI::GetOrders(string instrument_id, string status, string from, string
     return Request(method, request_path);
 }
 
+/**
+ * get a order
+ *
+ * @param instrument_id
+ * @param order_id
+ * @return
+ */
+string OKAPI::GetOrderByProductIdAndOrderId(string order_id, string instrument_id) {
+    string method(GET);
+    map<string,string> m;
+    m.insert(make_pair("instrument_id", instrument_id));
+    string request_path = BuildParams(MarginOrderPrefix+"orders/"+order_id, m);
+    return Request(method, request_path);
+}
+
+string OKAPI::GetMarginOrdersPending(string from, string to, string limit, string instrument_id) {
+    string method(GET);
+    map<string,string> m;
+    m.insert(make_pair("from", from));
+    m.insert(make_pair("to", to));
+    m.insert(make_pair("limit", limit));
+    m.insert(make_pair("instrument_id", instrument_id));
+    string request_path = BuildParams(MarginOrderPrefix+"orders_pending", m);
+    return Request(method, request_path);
+}
 
 string OKAPI::GetFills(string order_id, string instrument_id,  string from, string to, string limit) {
     string method(GET);
