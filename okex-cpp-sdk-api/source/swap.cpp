@@ -35,7 +35,7 @@ string OKAPI::GetSwapAccountsByInstrumentId(string instrument_id) {
  Get the swap contract settings
 */
 string OKAPI::GetSwapSettingsByInstrumentId(string instrument_id) {
-    return Request(GET, SwapPathPrefix+instrument_id+"/settings");
+    return Request(GET, SwapPathPrefix+"/accounts/"+instrument_id+"/settings");
 }
 
 /*
