@@ -18,7 +18,7 @@ string OKAPI::AddSpotBatchOrder(value &jsonObj) {
  * @param instrument_id
  * @param order
  */
-string OKAPI::CancleSpotOrdersByProductIdAndOrderId(string order_id, value &jsonObj) {
+string OKAPI::CancleSpotOrdersByInstrumentIdAndOrderId(string order_id, value &jsonObj) {
     string method(DELETE);
     string body = jsonObj.serialize();
     string request_path(SpotOrderPrefix+"orders/" + order_id);
@@ -44,7 +44,7 @@ string OKAPI::CancleSpotBatchOrders(value &jsonObj){
  * @param order_id
  * @return
  */
-string OKAPI::GetSpotOrderByProductIdAndOrderId(string order_id, string instrument_id) {
+string OKAPI::GetSpotOrderByInstrumentIdAndOrderId(string order_id, string instrument_id) {
     string method(GET);
     map<string,string> m;
     m.insert(make_pair("instrument_id", instrument_id));

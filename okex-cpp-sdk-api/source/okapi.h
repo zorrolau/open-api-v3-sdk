@@ -55,7 +55,7 @@ public:
 
     /************************** Futures API ***************************/
     string GetFuturesPositions();
-    string GetFuturesProductPosition(string instrument_id);
+    string GetFuturesInstrumentPosition(string instrument_id);
     string GetFuturesAccountsByCurrency(string currency);
     string GetFuturesLeverageByCurrency(string currency);
     string SetFuturesLeverageByCurrency(string currency, value &obj);
@@ -63,33 +63,33 @@ public:
 
     string FuturesOrder(value &obj);
     string FuturesOrders(value &obj);
-    string CancelFuturesProductOrder(string instrument_id, string order_id);
-    string CancelFuturesProductOrders(string instrument_id, value& jsonObj);
+    string CancelFuturesInstrumentOrder(string instrument_id, string order_id);
+    string CancelFuturesInstrumentOrders(string instrument_id, value& jsonObj);
 
     string GetFuturesOrders(string status, string instrument_id, string from="", string to="", string limit="");
     string GetFuturesOrderList(string instrument_id, string order_id);
     string GetFuturesFills(string instrument_id, string order_id, string from="", string to="", string limit="");
-    string GetFuturesProducts();
-    string GetFuturesProductBook(string &instrument_id, int book);
+    string GetFuturesInstruments();
+    string GetFuturesInstrumentBook(string &instrument_id, int book);
     string GetFuturesTicker();
-    string GetFuturesProductTicker(string &instrument_id);
-    string GetFuturesProductTrades(string &instrument_id, string from = "", string to = "", string limit = "");
-    string GetFuturesProductCandles(string instrument_id, string start="", string end="", int granularity=604800);
+    string GetFuturesInstrumentTicker(string &instrument_id);
+    string GetFuturesInstrumentTrades(string &instrument_id, string from = "", string to = "", string limit = "");
+    string GetFuturesInstrumentCandles(string instrument_id, string start="", string end="", int granularity=604800);
     string GetFuturesIndex(string instrument_id);
     string GetFuturesRate();
-    string GetFuturesProductEstimatedPrice(string instrument_id);
-    string GetFuturesProductOpenInterest(string instrument_id);
-    string GetFuturesProductPriceLimit(string instrument_id);
+    string GetFuturesInstrumentEstimatedPrice(string instrument_id);
+    string GetFuturesInstrumentOpenInterest(string instrument_id);
+    string GetFuturesInstrumentPriceLimit(string instrument_id);
     string GetFuturesInstrumentMarkPrice(string instrument_id);
-    string GetFuturesProductLiquidation(string instrument_id, int status, string from = "", string to = "", string limit = "");
-    string GetFuturesProductHolds(string instrument_id);
+    string GetFuturesInstrumentLiquidation(string instrument_id, int status, string from = "", string to = "", string limit = "");
+    string GetFuturesInstrumentHolds(string instrument_id);
 
     // 以下暂未在文档中描述
     string GetFuturesOrder(string order_id);
-    string GetFuturesProductCurrencies();
-    string GetFuturesProductIndex(string instrument_id);
+    string GetFuturesInstrumentCurrencies();
+    string GetFuturesInstrumentIndex(string instrument_id);
     string GetFuturesAccounts();
-    string GetFuturesAccountsHoldsByProductId(string instrument_id);
+    string GetFuturesAccountsHoldsByInstrumentId(string instrument_id);
     string FuturesClosePositionParams(value &obj);
     string GetFuturesUsersSelfTrailingVolume();
 
@@ -144,22 +144,22 @@ public:
 
      /************************** Margin Account API ***************************/
     string GetAccounts();
-    string GetAccountsByProductId(string instrument_id);
+    string GetAccountsByInstrumentId(string instrument_id);
     string GetMarginLedger(string instrument_id, string beginDate, string endDate, string isHistory, string currencyId, string type, string from, string to, string limit);
     string GetMarginInfo();
     string GetBorrowAccounts(string status, string type, string from, string to, string limit);
-    string GetMarginInfoByProductId(string instrument_id);
-    string GetBorrowAccountsByProductId(string instrument_id, string status, string from, string to, string limit);
+    string GetMarginInfoByInstrumentId(string instrument_id);
+    string GetBorrowAccountsByInstrumentId(string instrument_id, string status, string from, string to, string limit);
     string Borrow(value &jsonObj);
     string Repayment(value &jsonObj);
 
     /************************** Margin Order API ***************************/
     string AddOrder(value &jsonObj);
     string AddBatchOrder(value &jsonObj);
-    string CancleOrdersByProductIdAndOrderId(string order_id, string instrument_id, string client_oid = "");
+    string CancleOrdersByInstrumentIdAndOrderId(string order_id, string instrument_id, string client_oid = "");
     string CancleBatchOrders(value &jsonObj);
     string GetOrders(string instrument_id, string status, string from = "", string to = "", string limit = "");
-    string GetOrderByProductIdAndOrderId(string order_id, string instrument_id);
+    string GetOrderByInstrumentIdAndOrderId(string order_id, string instrument_id);
     string GetMarginOrdersPending(string from, string to, string limit, string instrument_id);
     string GetFills(string order_id, string instrument_id,  string from, string to, string limit);
 
@@ -172,16 +172,16 @@ public:
     /************************** Spot Order API ***************************/
     string AddSpotOrder(value &jsonObj);
     string AddSpotBatchOrder(value &jsonObj);
-    string CancleSpotOrdersByProductIdAndOrderId(string order_id, value &jsonObj);
+    string CancleSpotOrdersByInstrumentIdAndOrderId(string order_id, value &jsonObj);
     string CancleSpotBatchOrders(value &jsonObj);
     string GetSpotOrders(string instrument_id, string status, string from, string to, string limit);
     string GetSpotOrdersPending(string from, string to, string limit, string instrument_id);
-    string GetSpotOrderByProductIdAndOrderId(string order_id, string instrument_id);
+    string GetSpotOrderByInstrumentIdAndOrderId(string order_id, string instrument_id);
     string GetSpotFills(string order_id, string instrument_id, string from, string to, string limit);
 
     /************************** Spot Product API ***************************/
     string GetInstruments();
-    string GetInstrumentsByProductId(string instrument_id, string size, string depth);
+    string GetInstrumentsByInstrumentId(string instrument_id, string size, string depth);
     string GetTickers();
     string GetTickerByInstrumentId(string instrument_id);
     string GetTrades(string instrument_id, string from, string to, string limit);

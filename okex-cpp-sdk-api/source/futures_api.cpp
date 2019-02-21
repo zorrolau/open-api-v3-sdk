@@ -38,7 +38,7 @@ string OKAPI::GetExchangeRate() {
 /*
   Get all of futures contract list
  */
-string OKAPI::GetFuturesProducts() {
+string OKAPI::GetFuturesInstruments() {
     string method("GET");
     string request_path(FuturesPathPrefix+"instruments");
     string str = Request(method, request_path);
@@ -48,7 +48,7 @@ string OKAPI::GetFuturesProducts() {
 /*
  Get the futures contract currencies
  */
-string OKAPI::GetFuturesProductCurrencies(){
+string OKAPI::GetFuturesInstrumentCurrencies(){
     string method("GET");
     string request_path(FuturesPathPrefix+"instruments/currencies");
     string str = Request(method, request_path);
@@ -60,7 +60,7 @@ string OKAPI::GetFuturesProductCurrencies(){
  depth value：1-200
  merge value：1(merge depth)
 */
-string OKAPI::GetFuturesProductBook(string &instrument_id, int book) {
+string OKAPI::GetFuturesInstrumentBook(string &instrument_id, int book) {
     string method("GET");
     map<string,string> m;
     m.insert(make_pair("book", to_string(book)));
@@ -83,7 +83,7 @@ string OKAPI::GetFuturesTicker() {
 /*
  Get the futures contract instrument ticker
  */
-string OKAPI::GetFuturesProductTicker(string &instrument_id) {
+string OKAPI::GetFuturesInstrumentTicker(string &instrument_id) {
     string method("GET");
     string request_path(FuturesPathPrefix+"instruments/"+instrument_id+"/ticker");
     string str = Request(method, request_path);
@@ -93,7 +93,7 @@ string OKAPI::GetFuturesProductTicker(string &instrument_id) {
 /*
  Get the futures contract instrument trades
  */
-string OKAPI::GetFuturesProductTrades(string &instrument_id,  string from, string to, string limit) {
+string OKAPI::GetFuturesInstrumentTrades(string &instrument_id,  string from, string to, string limit) {
     string method("GET");
     map<string,string> m;
     if (!from.empty())
@@ -110,7 +110,7 @@ string OKAPI::GetFuturesProductTrades(string &instrument_id,  string from, strin
 /*
  Get the futures contract instrument candles
  */
-string OKAPI::GetFuturesProductCandles(string instrument_id, string start, string end, int granularity) {
+string OKAPI::GetFuturesInstrumentCandles(string instrument_id, string start, string end, int granularity) {
     string method("GET");
     map<string,string> m;
     m.insert(make_pair("start", start));
@@ -138,35 +138,35 @@ string OKAPI::GetFuturesRate() {
 /*
  Get the futures contract instrument index
  */
-string OKAPI::GetFuturesProductIndex(string instrument_id) {
+string OKAPI::GetFuturesInstrumentIndex(string instrument_id) {
     return Request(GET, FuturesPathPrefix+"instruments/"+instrument_id+"/index");
 }
 
 /*
  Get the futures contract instrument estimated price
  */
-string OKAPI::GetFuturesProductEstimatedPrice(string instrument_id) {
+string OKAPI::GetFuturesInstrumentEstimatedPrice(string instrument_id) {
     return Request(GET, FuturesPathPrefix+"instruments/"+instrument_id+"/estimated_price");
 }
 
 /*
  Get the futures contract instrument open interest
  */
-string OKAPI::GetFuturesProductOpenInterest(string instrument_id) {
+string OKAPI::GetFuturesInstrumentOpenInterest(string instrument_id) {
     return Request(GET, FuturesPathPrefix+"instruments/"+instrument_id+"/open_interest");
 }
 
 /*
  Get the futures contract instrument holds
  */
-string OKAPI::GetFuturesProductHolds(string instrument_id) {
+string OKAPI::GetFuturesInstrumentHolds(string instrument_id) {
     return Request(GET, FuturesPathPrefix+"accounts/"+instrument_id+"/holds");
 }
 
 /*
  Get the futures contract instrument limit price
  */
-string OKAPI::GetFuturesProductPriceLimit(string instrument_id) {
+string OKAPI::GetFuturesInstrumentPriceLimit(string instrument_id) {
     return Request(GET, FuturesPathPrefix+"instruments/"+instrument_id+"/price_limit");
 }
 
@@ -180,7 +180,7 @@ string OKAPI::GetFuturesInstrumentMarkPrice(string instrument_id) {
 /*
  Get the futures contract liquidation
  */
-string OKAPI::GetFuturesProductLiquidation(string instrument_id, int status, string from, string to, string limit) {
+string OKAPI::GetFuturesInstrumentLiquidation(string instrument_id, int status, string from, string to, string limit) {
     string method("GET");
     map<string,string> m;
     m.insert(make_pair("status", to_string(status)));
@@ -215,7 +215,7 @@ string OKAPI::GetFuturesPositions() {
  Get all of futures contract position list.
  return struct: FuturesPositions
 */
-string OKAPI::GetFuturesProductPosition(string instrument_id) {
+string OKAPI::GetFuturesInstrumentPosition(string instrument_id) {
     return Request(GET, FuturesPathPrefix+instrument_id+"/position");
 }
 
@@ -260,7 +260,7 @@ string OKAPI::GetFuturesAccountsLedgerByCurrency(string currency) {
 /*
  Get the futures contract instrument holds
 */
-string OKAPI::GetFuturesAccountsHoldsByProductId(string instrument_id) {
+string OKAPI::GetFuturesAccountsHoldsByInstrumentId(string instrument_id) {
     return Request(GET, FuturesPathPrefix+"accounts/"+instrument_id+"/holds");
 }
 
@@ -283,14 +283,14 @@ string OKAPI::FuturesOrders(value &obj) {
 /*
  Cancel the order
 */
-string OKAPI::CancelFuturesProductOrder(string instrument_id, string order_id) {
+string OKAPI::CancelFuturesInstrumentOrder(string instrument_id, string order_id) {
     return Request(POST, FuturesPathPrefix+"cancel_order/"+instrument_id+"/"+order_id);
 }
 
 /*
  Batch Cancel the orders
 */
-string OKAPI::CancelFuturesProductOrders(string instrument_id, value& jsonObj) {
+string OKAPI::CancelFuturesInstrumentOrders(string instrument_id, value& jsonObj) {
     return Request(POST, FuturesPathPrefix+"cancel_batch_orders/"+instrument_id + jsonObj.serialize());
 }
 

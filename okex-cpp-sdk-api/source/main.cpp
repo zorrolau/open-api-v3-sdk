@@ -51,7 +51,7 @@ int main(int argc, char *args[]) {
     if (0) {
         value obj;
         okapi.GetFuturesPositions();
-        okapi.GetFuturesProductPosition(instrument_id);
+        okapi.GetFuturesInstrumentPosition(instrument_id);
         okapi.GetFuturesAccountsByCurrency(currency);
         okapi.GetFuturesLeverageByCurrency(currency);
         obj["instrument_id"] = value::string(instrument_id);
@@ -67,24 +67,24 @@ int main(int argc, char *args[]) {
         obj["margin_price"] = value::number(0);
         obj["leverage"] = value::number(10);
         okapi.FuturesOrder(obj);
-        okapi.CancelFuturesProductOrder(instrument_id, order_id);
+        okapi.CancelFuturesInstrumentOrder(instrument_id, order_id);
 
         okapi.GetFuturesOrders("2", instrument_id);
         okapi.GetFuturesOrderList(instrument_id, order_id);
         okapi.GetFuturesFills(instrument_id, order_id);
-        okapi.GetFuturesProducts();
-        okapi.GetFuturesProductBook(instrument_id, 50);
+        okapi.GetFuturesInstruments();
+        okapi.GetFuturesInstrumentBook(instrument_id, 50);
         okapi.GetFuturesTicker();
-        okapi.GetFuturesProductTicker(instrument_id);
-        okapi.GetFuturesProductTrades(instrument_id);
-        okapi.GetFuturesProductCandles(instrument_id);
+        okapi.GetFuturesInstrumentTicker(instrument_id);
+        okapi.GetFuturesInstrumentTrades(instrument_id);
+        okapi.GetFuturesInstrumentCandles(instrument_id);
         okapi.GetFuturesIndex(instrument_id);
         okapi.GetFuturesRate();
-        okapi.GetFuturesProductEstimatedPrice(instrument_id);
-        okapi.GetFuturesProductOpenInterest(instrument_id);
-        okapi.GetFuturesProductPriceLimit(instrument_id);
-        okapi.GetFuturesProductLiquidation(instrument_id, 0);
-        okapi.GetFuturesProductHolds(instrument_id);
+        okapi.GetFuturesInstrumentEstimatedPrice(instrument_id);
+        okapi.GetFuturesInstrumentOpenInterest(instrument_id);
+        okapi.GetFuturesInstrumentPriceLimit(instrument_id);
+        okapi.GetFuturesInstrumentLiquidation(instrument_id, 0);
+        okapi.GetFuturesInstrumentHolds(instrument_id);
     }
 
 

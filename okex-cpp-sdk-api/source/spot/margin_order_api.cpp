@@ -17,7 +17,7 @@ string OKAPI::AddBatchOrder(value &jsonObj) {
  * @param instrument_id
  * @param order_id
  */
-string OKAPI::CancleOrdersByProductIdAndOrderId(string order_id, string instrument_id, string client_oid) {
+string OKAPI::CancleOrdersByInstrumentIdAndOrderId(string order_id, string instrument_id, string client_oid) {
     string method(POST);
     value obj;
     obj[client_oid] = value::string(client_oid);
@@ -71,7 +71,7 @@ string OKAPI::GetOrders(string instrument_id, string status, string from, string
  * @param order_id
  * @return
  */
-string OKAPI::GetOrderByProductIdAndOrderId(string order_id, string instrument_id) {
+string OKAPI::GetOrderByInstrumentIdAndOrderId(string order_id, string instrument_id) {
     string method(GET);
     map<string,string> m;
     m.insert(make_pair("instrument_id", instrument_id));

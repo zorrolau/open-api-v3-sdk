@@ -12,7 +12,7 @@ string OKAPI::GetInstruments(){
 }
 
 
-string OKAPI::GetInstrumentsByProductId(string instrument_id, string size, string depth) {
+string OKAPI::GetInstrumentsByInstrumentId(string instrument_id, string size, string depth) {
     string method(GET);
     map<string,string> m;
     m.insert(make_pair("size", size));
