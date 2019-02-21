@@ -277,7 +277,7 @@ string OKAPI::FuturesOrder(value &obj) {
 */
 string OKAPI::FuturesOrders(value &obj) {
     string params = obj.serialize();
-    return Request(POST, FuturesPathPrefix+"order", params);
+    return Request(POST, FuturesPathPrefix+"orders", params);
 }
 
 /*
