@@ -7,7 +7,7 @@
  Get all of swap contract position list.
  return struct: SwapPositions
 */
-string OKAPI::GetSwapProductPosition(string instrument_id) {
+string OKAPI::GetSwapInstrumentPosition(string instrument_id) {
     return Request(GET, SwapPathPrefix+instrument_id+"/position");
 }
 
@@ -84,14 +84,14 @@ string OKAPI::SwapOrders(value &obj) {
 /*
  Cancel the order
 */
-string OKAPI::CancelSwapProductOrder(string instrument_id, string order_id) {
+string OKAPI::CancelSwapInstrumentOrder(string instrument_id, string order_id) {
     return Request(POST, SwapPathPrefix+"cancel_order/"+instrument_id+"/"+order_id);
 }
 
 /*
  Batch Cancel the orders
 */
-string OKAPI::CancelSwapProductOrders(string instrument_id) {
+string OKAPI::CancelSwapInstrumentOrders(string instrument_id) {
     return Request(POST, SwapPathPrefix+"cancel_batch_orders/"+instrument_id);
 }
 
@@ -146,7 +146,7 @@ string OKAPI::GetSwapFills(string instrument_id, string order_id, string from, s
 /*
   Get all of swap contract list
  */
-string OKAPI::GetSwapProducts() {
+string OKAPI::GetSwapInstruments() {
     string method("GET");
     string request_path(SwapPathPrefix+"instruments");
     string str = Request(method, request_path);
@@ -158,7 +158,7 @@ string OKAPI::GetSwapProducts() {
  depth value：1-200
  merge value：1(merge depth)
 */
-string OKAPI::GetSwapProductDepth(string &instrument_id, string size) {
+string OKAPI::GetSwapInstrumentDepth(string &instrument_id, string size) {
     string method("GET");
     map<string,string> m;
     if (!size.empty()) {
@@ -182,7 +182,7 @@ string OKAPI::GetSwapTicker() {
 /*
  Get the swap contract instrument ticker
  */
-string OKAPI::GetSwapProductTicker(string &instrument_id) {
+string OKAPI::GetSwapInstrumentTicker(string &instrument_id) {
     string method("GET");
     string request_path(SwapPathPrefix+"instruments/"+instrument_id+"/ticker");
     string str = Request(method, request_path);
@@ -192,7 +192,7 @@ string OKAPI::GetSwapProductTicker(string &instrument_id) {
 /*
  Get the swap contract instrument trades
  */
-string OKAPI::GetSwapProductTrades(string &instrument_id, string from, string to, string limit) {
+string OKAPI::GetSwapInstrumentTrades(string &instrument_id, string from, string to, string limit) {
     string method("GET");
     map<string,string> m;
     if (!from.empty()) {
@@ -212,7 +212,7 @@ string OKAPI::GetSwapProductTrades(string &instrument_id, string from, string to
 /*
  Get the swap contract instrument candles
  */
-string OKAPI::GetSwapProductCandles(string instrument_id, string start, string end, int granularity) {
+string OKAPI::GetSwapInstrumentCandles(string instrument_id, string start, string end, int granularity) {
     string method("GET");
     map<string,string> m;
     m.insert(make_pair("start", start));
@@ -240,28 +240,28 @@ string OKAPI::GetSwapRate() {
 /*
  Get the swap contract instrument estimated price
  */
-//string OKAPI::GetSwapProductEstimatedPrice(string instrument_id) {
+//string OKAPI::GetSwapInstrumentEstimatedPrice(string instrument_id) {
 //    return Request(GET, SwapPathPrefix+"instruments/"+instrument_id+"/estimated_price");
 //}
 
 /*
  Get the swap contract instrument open interest
  */
-string OKAPI::GetSwapProductOpenInterest(string instrument_id) {
+string OKAPI::GetSwapInstrumentOpenInterest(string instrument_id) {
     return Request(GET, SwapPathPrefix+"instruments/"+instrument_id+"/open_interest");
 }
 
 /*
  Get the swap contract instrument limit price
  */
-string OKAPI::GetSwapProductPriceLimit(string instrument_id) {
+string OKAPI::GetSwapInstrumentPriceLimit(string instrument_id) {
     return Request(GET, SwapPathPrefix+"instruments/"+instrument_id+"/price_limit");
 }
 
 /*
  Get the swap contract liquidation
  */
-string OKAPI::GetSwapProductLiquidation(string instrument_id, string status, string from, string to, string limit) {
+string OKAPI::GetSwapInstrumentLiquidation(string instrument_id, string status, string from, string to, string limit) {
     string method("GET");
     map<string,string> m;
     m.insert(make_pair("status", status));
@@ -282,7 +282,7 @@ string OKAPI::GetSwapProductLiquidation(string instrument_id, string status, str
 /*
  Get the swap contract instrument holds
  */
-string OKAPI::GetSwapProductHolds(string instrument_id) {
+string OKAPI::GetSwapInstrumentHolds(string instrument_id) {
     return Request(GET, SwapPathPrefix+"accounts/"+instrument_id+"/holds");
 }
 

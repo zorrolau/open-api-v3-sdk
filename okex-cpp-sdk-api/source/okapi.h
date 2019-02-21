@@ -94,7 +94,7 @@ public:
     string GetFuturesUsersSelfTrailingVolume();
 
     /************************** Swap API ***************************/
-    string GetSwapProductPosition(string instrument_id);
+    string GetSwapInstrumentPosition(string instrument_id);
     string GetSwapAccounts();
     string GetSwapAccountsByCurrency(string currency);
     string GetSwapSettingsByCurrency(string currency);
@@ -103,25 +103,25 @@ public:
 
     string SwapOrder(value &obj);
     string SwapOrders(value &obj);
-    string CancelSwapProductOrder(string instrument_id, string order_id);
-    string CancelSwapProductOrders(string instrument_id);
+    string CancelSwapInstrumentOrder(string instrument_id, string order_id);
+    string CancelSwapInstrumentOrders(string instrument_id);
 
     string GetSwapOrders(string status, string instrument_id, string from="", string to="", string limit="");
     string GetSwapOrderList(string instrument_id, string order_id);
     string GetSwapFills(string instrument_id, string order_id, string from="", string to="", string limit="");
-    string GetSwapProducts();
-    string GetSwapProductDepth(string &instrument_id, string size);
+    string GetSwapInstruments();
+    string GetSwapInstrumentDepth(string &instrument_id, string size);
     string GetSwapTicker();
-    string GetSwapProductTicker(string &instrument_id);
-    string GetSwapProductTrades(string &instrument_id, string from="", string to="", string limit="");
-    string GetSwapProductCandles(string instrument_id, string start="", string end="", int granularity=604800);
+    string GetSwapInstrumentTicker(string &instrument_id);
+    string GetSwapInstrumentTrades(string &instrument_id, string from="", string to="", string limit="");
+    string GetSwapInstrumentCandles(string instrument_id, string start="", string end="", int granularity=604800);
     string GetSwapIndex(string instrument_id);
     string GetSwapRate();
-    string GetSwapProductEstimatedPrice(string instrument_id);
-    string GetSwapProductOpenInterest(string instrument_id);
-    string GetSwapProductPriceLimit(string instrument_id);
-    string GetSwapProductLiquidation(string instrument_id, string status, string from="", string to="", string limit="");
-    string GetSwapProductHolds(string instrument_id);
+    string GetSwapInstrumentEstimatedPrice(string instrument_id);
+    string GetSwapInstrumentOpenInterest(string instrument_id);
+    string GetSwapInstrumentPriceLimit(string instrument_id);
+    string GetSwapInstrumentLiquidation(string instrument_id, string status, string from="", string to="", string limit="");
+    string GetSwapInstrumentHolds(string instrument_id);
     string GetSwapFundingTime(string instrument_id);
     string GetSwapMarketPrice(string instrument_id);
     string GetSwapHistoricalFundingRate(string instrument_id, string from="", string to="", string limit="");
