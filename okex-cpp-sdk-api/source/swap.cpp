@@ -50,7 +50,7 @@ string OKAPI::GetSwapSettingsByInstrumentId(string instrument_id) {
 */
 string OKAPI::SetSwapLeverageByInstrumentId(string instrument_id, value &obj) {
     string params = obj.serialize();
-    return Request(POST, SwapPathPrefix+"accounts/"+instrument_id+"/leverage", params);
+    return Request(POST, SwapPathPrefix+"accounts/"+instrument_id+"/leverage" + params);
 }
 
 /*
