@@ -20,38 +20,38 @@ string OKAPI::GetSwapAccounts() {
 }
 
 /*
- Get the swap contract currency account
+ Get the swap contract instrument account
 */
-string OKAPI::GetSwapAccountsByCurrency(string currency) {
-    return Request(GET, SwapPathPrefix+currency+"/accounts");
+string OKAPI::GetSwapAccountsByInstrumentId(string instrument_id) {
+    return Request(GET, SwapPathPrefix+instrument_id+"/accounts");
 }
 
 /*
  Get the swap contract settings
 */
-string OKAPI::GetSwapSettingsByCurrency(string currency) {
-    return Request(GET, SwapPathPrefix+currency+"/settings");
+string OKAPI::GetSwapSettingsByInstrumentId(string instrument_id) {
+    return Request(GET, SwapPathPrefix+instrument_id+"/settings");
 }
 
 /*
- Get the swap contract currency leverage
+ Get the swap contract instrument leverage
 */
-//string OKAPI::GetSwapLeverageByCurrency(string currency) {
-//    return Request(GET, SwapPathPrefix+"accounts/"+currency+"/leverage");
+//string OKAPI::GetSwapLeverageByInstrumentId(string instrument_id) {
+//    return Request(GET, SwapPathPrefix+"accounts/"+instrument_id+"/leverage");
 //}
 
 /*
- Set the swap contract currency leverage
+ Set the swap contract instrument leverage
 */
-string OKAPI::SetSwapLeverageByCurrency(string currency, value &obj) {
+string OKAPI::SetSwapLeverageByInstrumentId(string instrument_id, value &obj) {
     string params = obj.serialize();
-    return Request(POST, SwapPathPrefix+"accounts/"+currency+"/leverage", params);
+    return Request(POST, SwapPathPrefix+"accounts/"+instrument_id+"/leverage", params);
 }
 
 /*
- Get the swap contract currency ledger
+ Get the swap contract instrument ledger
 */
-string OKAPI::GetSwapAccountsLedgerByCurrency(string currency, string from, string to, string limit) {
+string OKAPI::GetSwapAccountsLedgerByInstrumentId(string instrument_id, string from, string to, string limit) {
     string method(GET);
     map<string,string> m;
     if (!from.empty())
@@ -60,7 +60,7 @@ string OKAPI::GetSwapAccountsLedgerByCurrency(string currency, string from, stri
         m.insert(make_pair("to", to));
     if (!limit.empty())
         m.insert(make_pair("limit", limit));
-    string requestPath = SwapPathPrefix+"accounts/"+currency+"/ledger";
+    string requestPath = SwapPathPrefix+"accounts/"+instrument_id+"/ledger";
     string request_path = BuildParams(requestPath, m);
     return Request(method, request_path);
 }

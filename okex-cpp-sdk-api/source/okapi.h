@@ -96,10 +96,10 @@ public:
     /************************** Swap API ***************************/
     string GetSwapInstrumentPosition(string instrument_id);
     string GetSwapAccounts();
-    string GetSwapAccountsByCurrency(string currency);
-    string GetSwapSettingsByCurrency(string currency);
-    string SetSwapLeverageByCurrency(string currency, value &obj);
-    string GetSwapAccountsLedgerByCurrency(string currency, string from="", string to="", string limit="");
+    string GetSwapAccountsByInstrumentId(string currency);
+    string GetSwapSettingsByInstrumentId(string currency);
+    string SetSwapLeverageByInstrumentId(string currency, value &obj);
+    string GetSwapAccountsLedgerByInstrumentId(string currency, string from="", string to="", string limit="");
 
     string SwapOrder(value &obj);
     string SwapOrders(value &obj);
