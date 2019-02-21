@@ -209,7 +209,7 @@ string OKAPI::GetSwapInstrumentTrades(string &instrument_id, string from, string
     if (!limit.empty()) {
         m.insert(make_pair("limit", limit));
     }
-    string request_path = BuildParams(SwapPathPrefix+"instruments/"+instrument_id+"/liquidation", m);
+    string request_path = BuildParams(SwapPathPrefix+"instruments/"+instrument_id+"/trades", m);
     string str = Request(method, request_path);
     return str;
 }
