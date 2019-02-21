@@ -8,7 +8,7 @@
 #include <cpprest/json.h>
 #include <cpprest/filestream.h>
 
-#define BUFLEN 65536
+#define BUFLEN 4096
 
 using namespace web;
 using namespace web::websockets::client;

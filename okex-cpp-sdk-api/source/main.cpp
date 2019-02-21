@@ -19,6 +19,10 @@ int main(int argc, char *args[]) {
     config.IsPrint = true;
     config.Passphrase = "";
 
+    config.ApiKey = "0cf9293a-548c-48c5-9b59-612c2fdab648";
+    config.SecretKey = "A75378969CAD5B7B8A97C6837E38F150";
+    config.Passphrase = "123456";
+
     okapi.SetConfig(config);
     /************************** test examples **********************/
     if (0) {
@@ -89,8 +93,9 @@ int main(int argc, char *args[]) {
 
 
     /************************** websocket test examples **********************/
+//    string uri = U("ws://real.okex.com:10442/ws/v3");
+    string uri = U("ws://192.168.80.113:10442/ws/v3?_compress=false");
     if (0) {
-        string uri = U("ws://real.okex.com:10442/ws/v3");
         pplx::create_task([=] {
             okapi_ws::SubscribeWithoutLogin(uri, U("swap/ticker:BTC-USD-SWAP"));
         });
@@ -105,13 +110,35 @@ int main(int argc, char *args[]) {
         okapi_ws::Unsubscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
     }
 
-    if (1) {
-        string uri = U("ws://real.okex.com:10442/ws/v3");
+    if (0) {
+        //深度频道
         pplx::create_task([=] {
             okapi_ws::SubscribeWithoutLogin(uri, U("swap/depth:BTC-USD-SWAP"));
         });
         sleep(20);
         okapi_ws::UnsubscribeWithoutLogin(uri, U("swap/depth:BTC-USD-SWAP"));
+    }
+
+    if (1) {
+        //用户持仓频道
+        pplx::create_task([=] {
+                              okapi_ws::Subscribe(uri, U("swap/position:BTC-USD-SWAP"), config.ApiKey, config.Passphrase,
+                                                  config.SecretKey);
+                          }
+        );
+        sleep(20);
+        okapi_ws::Unsubscribe(uri, U("swap/position:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
+    }
+
+    if (1) {
+        //用户账户频道
+        pplx::create_task([=] {
+                              okapi_ws::Subscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase,
+                                                  config.SecretKey);
+                          }
+        );
+        sleep(20);
+        okapi_ws::Unsubscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
     }
     return 0;
 }
