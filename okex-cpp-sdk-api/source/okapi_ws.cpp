@@ -8,7 +8,7 @@
 #include <cpprest/json.h>
 #include <cpprest/filestream.h>
 
-#define BUFLEN 4096
+#define BUFLEN 65536
 
 using namespace web;
 using namespace web::websockets::client;
@@ -86,7 +86,7 @@ void okapi_ws::RequestWithoutLogin(std::string url, std::string channels, std:: 
                           unsigned char buf[BUFLEN]= {0};
                           unsigned char data[BUFLEN] = {0};
 
-                          auto buflen = msg.body().streambuf().scopy(buf, 65536);
+                          auto buflen = msg.body().streambuf().scopy(buf, BUFLEN);
                           uLong datalen = sizeof(data);
 
                           if (msg.message_type() == websocket_message_type::binary_message) {
