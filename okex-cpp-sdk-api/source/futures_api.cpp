@@ -180,10 +180,19 @@ string OKAPI::GetFuturesInstrumentMarkPrice(string instrument_id) {
 /*
  Get the futures contract liquidation
  */
-string OKAPI::GetFuturesProductLiquidation(string instrument_id, int status) {
+string OKAPI::GetFuturesProductLiquidation(string instrument_id, int status, string from, string to, string limit) {
     string method("GET");
     map<string,string> m;
     m.insert(make_pair("status", to_string(status)));
+    if (!from.empty()) {
+        m.insert(make_pair("from", from));
+    }
+    if (!to.empty()) {
+        m.insert(make_pair("to", to));
+    }
+    if (!limit.empty()) {
+        m.insert(make_pair("limit", limit));
+    }
     string request_path = BuildParams(FuturesPathPrefix+"instruments/"+instrument_id+"/liquidation", m);
     string str = Request(method, request_path);
     return str;

@@ -81,7 +81,7 @@ public:
     string GetFuturesProductOpenInterest(string instrument_id);
     string GetFuturesProductPriceLimit(string instrument_id);
     string GetFuturesInstrumentMarkPrice(string instrument_id);
-    string GetFuturesProductLiquidation(string instrument_id, int status);
+    string GetFuturesProductLiquidation(string instrument_id, int status, string from = "", string to = "", string limit = "");
     string GetFuturesProductHolds(string instrument_id);
 
     // 以下暂未在文档中描述
