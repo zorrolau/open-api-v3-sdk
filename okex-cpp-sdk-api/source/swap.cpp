@@ -96,8 +96,8 @@ string OKAPI::CancelSwapInstrumentOrder(string instrument_id, string order_id) {
 /*
  Batch Cancel the orders
 */
-string OKAPI::CancelSwapInstrumentOrders(string instrument_id) {
-    return Request(POST, SwapPathPrefix+"cancel_batch_orders/"+instrument_id);
+string OKAPI::CancelSwapInstrumentOrders(string instrument_id, value& obj) {
+    return Request(POST, SwapPathPrefix+"cancel_batch_orders/"+instrument_id+obj.serialize());
 }
 
 /*

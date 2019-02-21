@@ -105,7 +105,7 @@ public:
     string AddSwapOrder(value &obj);
     string AddBatchSwapOrders(value &obj);
     string CancelSwapInstrumentOrder(string instrument_id, string order_id);
-    string CancelSwapInstrumentOrders(string instrument_id);
+    string CancelSwapInstrumentOrders(string instrument_id, value& obj);
 
     string GetSwapOrderList(string status, string instrument_id, string from="", string to="", string limit="");
     string GetSwapOrder(string instrument_id, string order_id);
