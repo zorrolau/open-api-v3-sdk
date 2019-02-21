@@ -64,7 +64,7 @@ public:
     string FuturesOrder(value &obj);
     string FuturesOrders(value &obj);
     string CancelFuturesProductOrder(string instrument_id, string order_id);
-    string CancelFuturesProductOrders(string instrument_id);
+    string CancelFuturesProductOrders(string instrument_id, value& jsonObj);
 
     string GetFuturesOrders(string status, string instrument_id, string from="", string to="", string limit="");
     string GetFuturesOrderList(string instrument_id, string order_id);

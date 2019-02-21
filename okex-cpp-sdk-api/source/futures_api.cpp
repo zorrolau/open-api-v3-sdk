@@ -290,8 +290,8 @@ string OKAPI::CancelFuturesProductOrder(string instrument_id, string order_id) {
 /*
  Batch Cancel the orders
 */
-string OKAPI::CancelFuturesProductOrders(string instrument_id) {
-    return Request(POST, FuturesPathPrefix+"cancel_batch_orders/"+instrument_id);
+string OKAPI::CancelFuturesProductOrders(string instrument_id, value& jsonObj) {
+    return Request(POST, FuturesPathPrefix+"cancel_batch_orders/"+instrument_id + jsonObj.serialize());
 }
 
 /*
