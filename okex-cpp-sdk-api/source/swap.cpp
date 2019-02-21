@@ -4,8 +4,14 @@
 #include "okapi.h"
 
 /*
- Get all of swap contract position list.
- return struct: SwapPositions
+ Get all of futures contract position list.
+*/
+string OKAPI::GetSwapPositions() {
+    return Request(GET, SwapPathPrefix+"position");
+}
+
+/*
+ Get swap contract position list.
 */
 string OKAPI::GetSwapInstrumentPosition(string instrument_id) {
     return Request(GET, SwapPathPrefix+instrument_id+"/position");
@@ -13,7 +19,6 @@ string OKAPI::GetSwapInstrumentPosition(string instrument_id) {
 
 /*
  Get all of swap contract account list
- return struct: SwapAccounts
 */
 string OKAPI::GetSwapAccounts() {
     return Request(GET, SwapPathPrefix+"accounts");
@@ -68,7 +73,7 @@ string OKAPI::GetSwapAccountsLedgerByInstrumentId(string instrument_id, string f
 /*
  Create a new order
 */
-string OKAPI::SwapOrder(value &obj) {
+string OKAPI::AddSwapOrder(value &obj) {
     string params = obj.serialize();
     return Request(POST, SwapPathPrefix+"order", params);
 }
@@ -76,7 +81,7 @@ string OKAPI::SwapOrder(value &obj) {
 /*
  Batch create new order.(Max of 5 orders are allowed per request)
 */
-string OKAPI::SwapOrders(value &obj) {
+string OKAPI::AddBatchSwapOrders(value &obj) {
     string params = obj.serialize();
     return Request(POST, SwapPathPrefix+"orders", params);
 }
@@ -98,7 +103,7 @@ string OKAPI::CancelSwapInstrumentOrders(string instrument_id) {
 /*
  Get all of swap contract order list
 */
-string OKAPI::GetSwapOrders(string status, string instrument_id, string from, string to, string limit) {
+string OKAPI::GetSwapOrderList(string status, string instrument_id, string from, string to, string limit) {
     string method(GET);
     map<string,string> m;
     if (!status.empty())
@@ -119,9 +124,9 @@ string OKAPI::GetSwapOrders(string status, string instrument_id, string from, st
 }
 
 /*
- Get the swap contract instrument order list
+ Get the swap contract instrument order
 */
-string OKAPI::GetSwapOrderList(string instrument_id, string order_id) {
+string OKAPI::GetSwapOrder(string instrument_id, string order_id) {
     return Request(GET, SwapPathPrefix+"orders/"+instrument_id+"/"+order_id);
 }
 

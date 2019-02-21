@@ -94,20 +94,21 @@ public:
     string GetFuturesUsersSelfTrailingVolume();
 
     /************************** Swap API ***************************/
+    string GetSwapPositions();
     string GetSwapInstrumentPosition(string instrument_id);
     string GetSwapAccounts();
-    string GetSwapAccountsByInstrumentId(string currency);
-    string GetSwapSettingsByInstrumentId(string currency);
-    string SetSwapLeverageByInstrumentId(string currency, value &obj);
-    string GetSwapAccountsLedgerByInstrumentId(string currency, string from="", string to="", string limit="");
+    string GetSwapAccountsByInstrumentId(string instrument_id);
+    string GetSwapSettingsByInstrumentId(string instrument_id);
+    string SetSwapLeverageByInstrumentId(string instrument_id, value &obj);
+    string GetSwapAccountsLedgerByInstrumentId(string instrument_id, string from="", string to="", string limit="");
 
-    string SwapOrder(value &obj);
-    string SwapOrders(value &obj);
+    string AddSwapOrder(value &obj);
+    string AddBatchSwapOrders(value &obj);
     string CancelSwapInstrumentOrder(string instrument_id, string order_id);
     string CancelSwapInstrumentOrders(string instrument_id);
 
-    string GetSwapOrders(string status, string instrument_id, string from="", string to="", string limit="");
-    string GetSwapOrderList(string instrument_id, string order_id);
+    string GetSwapOrderList(string status, string instrument_id, string from="", string to="", string limit="");
+    string GetSwapOrder(string instrument_id, string order_id);
     string GetSwapFills(string instrument_id, string order_id, string from="", string to="", string limit="");
     string GetSwapInstruments();
     string GetSwapInstrumentDepth(string &instrument_id, string size);
