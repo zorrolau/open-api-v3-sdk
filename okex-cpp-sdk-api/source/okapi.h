@@ -80,6 +80,7 @@ public:
     string GetFuturesProductEstimatedPrice(string instrument_id);
     string GetFuturesProductOpenInterest(string instrument_id);
     string GetFuturesProductPriceLimit(string instrument_id);
+    string GetFuturesInstrumentMarkPrice(string instrument_id);
     string GetFuturesProductLiquidation(string instrument_id, int status);
     string GetFuturesProductHolds(string instrument_id);
 

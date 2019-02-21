@@ -171,6 +171,13 @@ string OKAPI::GetFuturesProductPriceLimit(string instrument_id) {
 }
 
 /*
+ Get the futures contract instrument mark price
+ */
+string OKAPI::GetFuturesInstrumentMarkPrice(string instrument_id) {
+    return Request(GET, FuturesPathPrefix+"instruments/"+instrument_id+"/mark_price");
+}
+
+/*
  Get the futures contract liquidation
  */
 string OKAPI::GetFuturesProductLiquidation(string instrument_id, int status) {
