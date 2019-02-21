@@ -104,5 +104,14 @@ int main(int argc, char *args[]) {
         sleep(20);
         okapi_ws::Unsubscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
     }
+
+    if (1) {
+        string uri = U("ws://real.okex.com:10442/ws/v3");
+        pplx::create_task([=] {
+            okapi_ws::SubscribeWithoutLogin(uri, U("swap/depth:BTC-USD-SWAP"));
+        });
+        sleep(20);
+        okapi_ws::UnsubscribeWithoutLogin(uri, U("swap/depth:BTC-USD-SWAP"));
+    }
     return 0;
 }
