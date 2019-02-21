@@ -246,7 +246,7 @@ string OKAPI::GetFuturesLeverageByCurrency(string currency) {
 */
 string OKAPI::SetFuturesLeverageByCurrency(string currency, value &obj) {
     string params = obj.serialize();
-    return Request(POST, FuturesPathPrefix+"accounts/"+currency+"/leverage", params);
+    return Request(POST, FuturesPathPrefix+"accounts/"+currency+"/leverage" + params);
 }
 
 
