@@ -128,11 +128,6 @@ class SpotAPI(Client):
     def get_specific_ticker(self, instrument_id):
         return self._request_without_params(GET, SPOT_SPECIFIC_TICKER + str(instrument_id) + '/ticker')
 
-    # query spot deal info
-    #def get_deal(self, instrument_id, before, after, limit):
-    #    params = {'before': before, 'after': after, 'limit': limit}
-    #    return self._request_with_params(GET, SPOT_DEAL + str(instrument_id) + '/trades', params)
-
     def get_deal(self, instrument_id, froms, to, limit):
         params = {}
         if froms:
