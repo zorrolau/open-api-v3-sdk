@@ -33,6 +33,21 @@ class SpotAPI(Client):
                   'price': price, 'funds': funds, 'margin_trading': margin_trading}
         return self._request_with_params(POST, SPOT_ORDER, params)
 
+    # take orders
+    # 市价单
+    # params = [
+    #   {"client_oid":"20180728","instrument_id":"btc-usdt","side":"sell","type":"market"," size ":"0.001"," notional ":"10001","margin_trading ":"1"},
+    #   {"client_oid":"20180728","instrument_id":"btc-usdt","side":"sell","type":"limit"," size ":"0.001","notional":"10002","margin_trading ":"1"}
+    # ]
+
+    # 限价单
+    # params = [
+    #   {"client_oid":"20180728","instrument_id":"btc-usdt","side":"sell","type":"limit","size":"0.001","price":"10001","margin_trading ":"1"},
+    #   {"client_oid":"20180728","instrument_id":"btc-usdt","side":"sell","type":"limit","size":"0.001","price":"10002","margin_trading ":"1"}
+    # ]
+    def take_orders(self, params):
+        return self._request_with_params(POST, SPOT_ORDERS, params)
+
     # revoke order
     def revoke_order(self, oid, instrument_id):
         params = {'instrument_id': instrument_id}
