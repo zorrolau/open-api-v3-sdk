@@ -141,10 +141,10 @@ class LeverAPI(Client):
         return self._request_with_params(GET, LEVER_ORDER_INFO + str(oid), params)
 
     # query fills
-    def get_fills(self, order_id, instrument_id, before, after, limit):
-        params = {'before': before, 'after': after, 'limit': limit, 'order_id': order_id, 'instrument_id': instrument_id}
-        return self._request_with_params(GET, LEVER_FILLS, params, cursor=True)
+    # def get_fills_v3(self, order_id, instrument_id, before, after, limit):
+    #     params = {'before': before, 'after': after, 'limit': limit, 'order_id': order_id, 'instrument_id': instrument_id}
+    #     return self._request_with_params(GET, LEVER_FILLS, params, cursor=True)
 
-    def get_fills_v3(self, order_id, instrument_id, froms, to, limit):
+    def get_fills(self, order_id, instrument_id, froms, to, limit):
         params = {'from': froms, 'to': to, 'limit': limit, 'order_id': order_id, 'instrument_id': instrument_id}
         return self._request_with_params(GET, LEVER_FILLS, params, cursor=True)
