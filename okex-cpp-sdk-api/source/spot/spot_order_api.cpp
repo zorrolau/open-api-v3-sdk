@@ -32,7 +32,7 @@ string OKAPI::CancleSpotOrdersByInstrumentIdAndOrderId(string order_id, value &j
  * @param order_ids
  */
 string OKAPI::CancleSpotBatchOrders(value &jsonObj){
-    string method(DELETE);
+    string method(POST);
     string params = jsonObj.serialize();
     return Request(POST, SpotOrderPrefix+"cancel_batch_orders", params);
 }
