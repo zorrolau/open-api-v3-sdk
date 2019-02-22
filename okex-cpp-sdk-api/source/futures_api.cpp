@@ -291,7 +291,7 @@ string OKAPI::CancelFuturesInstrumentOrder(string instrument_id, string order_id
  Batch Cancel the orders
 */
 string OKAPI::CancelFuturesInstrumentOrders(string instrument_id, value& jsonObj) {
-    return Request(POST, FuturesPathPrefix+"cancel_batch_orders/"+instrument_id + jsonObj.serialize());
+    return Request(POST, FuturesPathPrefix+"cancel_batch_orders/"+instrument_id, jsonObj.serialize());
 }
 
 /*
