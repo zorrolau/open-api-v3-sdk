@@ -295,9 +295,9 @@ string OKAPI::CancelFuturesInstrumentOrders(string instrument_id, value& jsonObj
 }
 
 /*
- Get the futures contract instrument order list
+ Get the futures contract instrument order
 */
-string OKAPI::GetFuturesOrderList(string instrument_id, string order_id) {
+string OKAPI::GetFuturesOrder(string instrument_id, string order_id) {
     return Request(GET, FuturesPathPrefix+"orders/"+instrument_id+"/"+order_id);
 }
 
@@ -312,7 +312,7 @@ string OKAPI::FuturesClosePositionParams(value &obj) {
 /*
  Get all of futures contract order list
 */
-string OKAPI::GetFuturesOrders(string status, string instrument_id, string from, string to, string limit) {
+string OKAPI::GetFuturesOrderList(string status, string instrument_id, string from, string to, string limit) {
     string method(GET);
     map<string,string> m;
     if (!status.empty())

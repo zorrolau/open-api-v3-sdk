@@ -69,8 +69,8 @@ int main(int argc, char *args[]) {
         okapi.FuturesOrder(obj);
         okapi.CancelFuturesInstrumentOrder(instrument_id, order_id);
 
-        okapi.GetFuturesOrders("2", instrument_id);
-        okapi.GetFuturesOrderList(instrument_id, order_id);
+        okapi.GetFuturesOrderList("2", instrument_id);
+        okapi.GetFuturesOrder(instrument_id, order_id);
         okapi.GetFuturesFills(instrument_id, order_id);
         okapi.GetFuturesInstruments();
         okapi.GetFuturesInstrumentBook(instrument_id, 50);

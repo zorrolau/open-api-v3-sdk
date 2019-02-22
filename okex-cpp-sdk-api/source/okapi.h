@@ -66,8 +66,8 @@ public:
     string CancelFuturesInstrumentOrder(string instrument_id, string order_id);
     string CancelFuturesInstrumentOrders(string instrument_id, value& jsonObj);
 
-    string GetFuturesOrders(string status, string instrument_id, string from="", string to="", string limit="");
-    string GetFuturesOrderList(string instrument_id, string order_id);
+    string GetFuturesOrderList(string status, string instrument_id, string from="", string to="", string limit="");
+    string GetFuturesOrder(string instrument_id, string order_id);
     string GetFuturesFills(string instrument_id, string order_id, string from="", string to="", string limit="");
     string GetFuturesInstruments();
     string GetFuturesInstrumentBook(string &instrument_id, int book);
