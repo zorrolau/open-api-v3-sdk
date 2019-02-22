@@ -33,16 +33,34 @@ class SpotAPI(Client):
                   'price': price, 'funds': funds, 'margin_trading': margin_trading}
         return self._request_with_params(POST, SPOT_ORDER, params)
 
+    # take orders
+    # 市价单
+    # params = [
+    #   {"client_oid":"20180728","instrument_id":"btc-usdt","side":"sell","type":"market"," size ":"0.001"," notional ":"10001","margin_trading ":"1"},
+    #   {"client_oid":"20180728","instrument_id":"btc-usdt","side":"sell","type":"limit"," size ":"0.001","notional":"10002","margin_trading ":"1"}
+    # ]
+
+    # 限价单
+    # params = [
+    #   {"client_oid":"20180728","instrument_id":"btc-usdt","side":"sell","type":"limit","size":"0.001","price":"10001","margin_trading ":"1"},
+    #   {"client_oid":"20180728","instrument_id":"btc-usdt","side":"sell","type":"limit","size":"0.001","price":"10002","margin_trading ":"1"}
+    # ]
+    def take_orders(self, params):
+        return self._request_with_params(POST, SPOT_ORDERS, params)
+
     # revoke order
     def revoke_order(self, oid, instrument_id):
         params = {'instrument_id': instrument_id}
         return self._request_with_params(POST, SPOT_REVOKE_ORDER + str(oid), params)
 
     # revoke orders
-    def revoke_orders(self, instrument_id, order_ids):
-        if isinstance(order_ids, str):
-            order_ids = [order_ids]
-        params = {'instrument_id': instrument_id, 'order_ids': order_ids}
+
+    # params example:
+    # [
+    #   {"instrument_id":"btc-usdt","order_ids":[1600593327162368,1600593327162369]},
+    #   {"instrument_id":"ltc-usdt","order_ids":[243464,234465]}
+    # ]
+    def revoke_orders(self, params):
         return self._request_with_params(POST, SPOT_REVOKE_ORDERS, params)
 
     # query orders list
