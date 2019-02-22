@@ -19,10 +19,6 @@ int main(int argc, char *args[]) {
     config.IsPrint = true;
     config.Passphrase = "";
 
-    config.ApiKey = "0cf9293a-548c-48c5-9b59-612c2fdab648";
-    config.SecretKey = "A75378969CAD5B7B8A97C6837E38F150";
-    config.Passphrase = "123456";
-
     okapi.SetConfig(config);
     /************************** test examples **********************/
     if (0) {
@@ -91,6 +87,20 @@ int main(int argc, char *args[]) {
         okapi.GetFuturesInstrumentHolds(instrument_id);
     }
 
+    if(1){
+        string swap_instrument_id = "BTC-USD-SWAP";
+        value postSwapCancelBatchOrderParams;
+        value corders = value::array();
+        value order1 = value::string("64-98-49f5f30f7-0");
+        value order2 = value::string("64-98-49f5f30f8-0");
+        corders[0] = order1;
+        corders[1] = order2;
+        postSwapCancelBatchOrderParams["ids"] = corders;
+        //okapi.GetSwapMarketPrice(swap_instrument_id);
+        okapi.CancelSwapInstrumentOrders(swap_instrument_id,postSwapCancelBatchOrderParams); // 批量撤单 形参应该是个json Object
+
+
+    }
 
     /************************** websocket test examples **********************/
 //    string uri = U("ws://real.okex.com:10442/ws/v3");
@@ -119,7 +129,7 @@ int main(int argc, char *args[]) {
         okapi_ws::UnsubscribeWithoutLogin(uri, U("swap/depth:BTC-USD-SWAP"));
     }
 
-    if (1) {
+    if (0) {
         //用户持仓频道
         pplx::create_task([=] {
                               okapi_ws::Subscribe(uri, U("swap/position:BTC-USD-SWAP"), config.ApiKey, config.Passphrase,
@@ -130,7 +140,7 @@ int main(int argc, char *args[]) {
         okapi_ws::Unsubscribe(uri, U("swap/position:BTC-USD-SWAP"), config.ApiKey, config.Passphrase, config.SecretKey);
     }
 
-    if (1) {
+    if (0) {
         //用户账户频道
         pplx::create_task([=] {
                               okapi_ws::Subscribe(uri, U("swap/account:BTC-USD-SWAP"), config.ApiKey, config.Passphrase,
