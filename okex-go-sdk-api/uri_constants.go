@@ -17,6 +17,7 @@ const (
 	FUTURES_INSTRUMENT_TICKER             = "/api/futures/v3/instruments/{instrument_id}/ticker"
 	FUTURES_INSTRUMENT_TRADES             = "/api/futures/v3/instruments/{instrument_id}/trades"
 	FUTURES_INSTRUMENT_CANDLES            = "/api/futures/v3/instruments/{instrument_id}/candles"
+	FUTURES_INSTRUMENT_MARK_PRICE         = "/api/futures/v3/instruments/{instrument_id}/mark_price"
 	FUTURES_INSTRUMENT_INDEX              = "/api/futures/v3/instruments/{instrument_id}/index"
 	FUTURES_INSTRUMENT_ESTIMATED_PRICE    = "/api/futures/v3/instruments/{instrument_id}/estimated_price"
 	FUTURES_INSTRUMENT_OPEN_INTEREST      = "/api/futures/v3/instruments/{instrument_id}/open_interest"
@@ -27,6 +28,7 @@ const (
 	FUTURES_ACCOUNTS                      = "/api/futures/v3/accounts"
 	FUTURES_ACCOUNT_CURRENCY_INFO         = "/api/futures/v3/accounts/{currency}"
 	FUTURES_ACCOUNT_CURRENCY_LEDGER       = "/api/futures/v3/accounts/{currency}/ledger"
+	FUTURES_ACCOUNT_CURRENCY_LEVERAGE     = "/api/futures/v3/accounts/{currency}/leverage"
 	FUTURES_ACCOUNT_INSTRUMENT_HOLDS      = "/api/futures/v3/accounts/{instrument_id}/holds"
 	FUTURES_ORDER                         = "/api/futures/v3/order"
 	FUTURES_ORDERS                        = "/api/futures/v3/orders"
@@ -62,6 +64,7 @@ const (
 	SWAP_RATE                               = "/api/swap/v3/rate"
 	SWAP_ORDER                              = "/api/swap/v3/order"
 	SWAP_ORDERS                             = "/api/swap/v3/orders"
+	SWAP_POSITION                           = "/api/swap/v3/position"
 
 	SWAP_CANCEL_BATCH_ORDERS = "/api/swap/v3/cancel_batch_orders/{instrument_id}"
 	SWAP_CANCEL_ORDER        = "/api/swap/v3/cancel_order/{instrument_id}/{order_id}"
