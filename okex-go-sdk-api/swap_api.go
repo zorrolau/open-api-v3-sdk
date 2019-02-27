@@ -24,6 +24,21 @@ func (client *Client) GetSwapPositionByInstrument(instrumentId string) (*SwapPos
 	return &sp, nil
 }
 
+/*
+所有合约持仓信息
+获取所有合约的持仓信息
+限速规则：1次/10s
+GET /api/swap/v3/position
+*/
+func (client *Client) GetSwapPositions() (*SwapPositionList, error) {
+
+	sp := SwapPositionList{}
+	if _, err := client.Request(GET, SWAP_POSITION, nil, &sp); err != nil {
+		return nil, err
+	}
+	return &sp, nil
+}
+
 func (client *Client) getSwapAccounts(uri string) (*SwapAccounts, error) {
 	sa := SwapAccounts{}
 	if _, err := client.Request(GET, uri, nil, &sa); err != nil {
@@ -46,8 +61,14 @@ func (client *Client) GetSwapAccounts() (*SwapAccounts, error) {
 HTTP请求
 GET /api/swap/v3/<instrument_id>/accounts
 */
-func (client *Client) GetSwapAccount(instrumentId string) (*SwapAccounts, error) {
-	return client.getSwapAccounts(GetInstrumentIdUri(SWAP_INSTRUMENT_ACCOUNT, instrumentId))
+func (client *Client) GetSwapAccount(instrumentId string) (*SwapAccount, error) {
+
+	sa := SwapAccount{}
+	uri := GetInstrumentIdUri(SWAP_INSTRUMENT_ACCOUNT, instrumentId)
+	if _, err := client.Request(GET, uri, nil, &sa); err != nil {
+		return nil, err
+	}
+	return &sa, nil
 }
 
 /*
@@ -266,7 +287,7 @@ GET /api/swap/v3/instruments/<instrument_id>/depth
 请求示例
 GET /api/swap/v3/instruments/<instrument_id>/depth?size=50
 */
-func (client *Client) GetSwapDepthByInstrumentId(instrumentId string, optionalSize string) (*SwapInstrumentDepth, error) {
+func (client *Client) GetSwapDepthByInstrumentId(instrumentId string, optionalSize string) (interface{}, error) {
 	sid := SwapInstrumentDepth{}
 	baseUri := GetInstrumentIdUri(SWAP_INSTRUMENT_DEPTH, instrumentId)
 	if optionalSize != "" {
@@ -277,7 +298,7 @@ func (client *Client) GetSwapDepthByInstrumentId(instrumentId string, optionalSi
 		return nil, err
 	}
 
-	return &sid, nil
+	return sid, nil
 }
 
 /*
@@ -343,7 +364,10 @@ GET /api/swap/v3/instruments/BTC-USD-SWAP/candles?start=2018-10-26T02:31:00.000Z
 func (client *Client) GetSwapCandlesByInstrument(instrumentId string, optionalParams map[string]string) (*SwapCandleList, error) {
 	scl := SwapCandleList{}
 	baseUri := GetInstrumentIdUri(SWAP_INSTRUMENT_CANDLES, instrumentId)
-	uri := BuildParams(baseUri, optionalParams)
+	uri := baseUri
+	if len(optionalParams) > 0 {
+		uri = BuildParams(baseUri, optionalParams)
+	}
 	if _, err := client.Request(GET, uri, nil, &scl); err != nil {
 		return nil, err
 	}
