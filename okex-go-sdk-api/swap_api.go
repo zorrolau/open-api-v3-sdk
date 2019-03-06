@@ -9,6 +9,7 @@ package okex
 
 import (
 	"errors"
+	"strings"
 )
 
 /*
@@ -222,17 +223,30 @@ GET /api/swap/v3/orders/<instrument_id>/<order_id>
 GET /api/swap/v3/orders/BTC-USD-SWAP/64-2a-26132f931-3
 */
 func (client *Client) GetSwapOrderByOrderId(instrumentId string, orderId string) (*BaseOrderInfo, error) {
-	if instrumentId == "" || orderId == "" {
-		return nil, errors.New("Request Parameter's invalid, instrumentId and orderId is required")
-	}
+	return client.GetSwapOrderById(instrumentId, orderId)
+}
 
-	uri := "/api/swap/v3/orders/" + instrumentId + "/" + orderId
-	bo := BaseOrderInfo{}
+/*
+获取订单信息
+通过订单id获取单个订单信息。
 
-	if _, err := client.Request(GET, uri, nil, &bo); err != nil {
+限速规则：40次/2s
+HTTP请求
+GET /api/swap/v3/orders/<instrument_id>/<order_id>
+or
+GET /api/swap/v3/orders/<instrument_id>/<client_oid>
+*/
+func (client *Client) GetSwapOrderById(instrumentId, orderOrClientId string) (*BaseOrderInfo, error) {
+
+	orderInfo := BaseOrderInfo{}
+	baseUri := GetInstrumentIdUri(SWAP_INSTRUMENT_ORDER_BY_ID, instrumentId)
+	uri := strings.Replace(baseUri, "{order_client_id}", orderOrClientId, -1)
+
+	if _, err := client.Request(GET, uri, nil, &orderInfo); err != nil {
 		return nil, err
 	}
-	return &bo, nil
+
+	return &orderInfo, nil
 }
 
 /*
